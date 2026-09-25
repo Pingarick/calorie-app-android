@@ -1,0 +1,37 @@
+# --- Gradle ---
+.gradle/
+build/
+
+# --- Secrets (never commit) ---
+# Contains VISION_OPENAI_API_KEY. Keep local only.
+gradle.properties
+# Auto-generated, machine-specific (sdk.dir).
+local.properties
+# Release signing key and its passwords. Keep local only.
+keystore.properties
+*.jks
+
+# --- Android / IDE ---
+*.apk
+*.aab
+*.keystore
+.cxx/
+captures/
+
+# --- Локальные дампы и артефакты ---
+.adbwork/
+dist/
+*.log
+*.jpg
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+.DS_Store
+
+# --- Дампы UI с корня проекта (мусор) ---
+/*.xml
+/*.png
+# Исключения: скриншоты для README (нужны в публичном репозитории)
+!/onboard.png
+!/picker.png

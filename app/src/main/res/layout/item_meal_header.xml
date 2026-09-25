@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Заголовок приёма пищи: акцентная полоса, название, подытог ккал и «+» в этот слот.
+     Цвет полосы и ккал задаёт адаптер — у каждого приёма пищи свой. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/space_5"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/mealAccent"
+        android:layout_width="@dimen/meal_accent_width"
+        android:layout_height="@dimen/meal_accent_height"
+        android:background="@drawable/meal_accent_bar"
+        android:importantForAccessibility="no" />
+
+    <TextView
+        android:id="@+id/txtMealTitle"
+        style="@style/TextAppearance.Calorie.CardTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_3"
+        android:layout_weight="1"
+        tools:text="Завтрак" />
+
+    <TextView
+        android:id="@+id/txtMealKcal"
+        style="@style/TextAppearance.Calorie.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_1"
+        tools:text="320 ккал" />
+
+    <ImageButton
+        android:id="@+id/btnMealAdd"
+        android:layout_width="@dimen/touch_target"
+        android:layout_height="@dimen/touch_target"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/meal_add_to"
+        android:src="@drawable/ic_add"
+        android:tint="@color/calorie_primary" />
+</LinearLayout>

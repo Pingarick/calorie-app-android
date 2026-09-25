@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Подпись пустого слота: без неё пропущенный приём пищи выглядел бы как сбой вёрстки. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/txtEmptySlot"
+    style="@style/TextAppearance.Calorie.Caption"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/space_4"
+    android:paddingTop="@dimen/space_2"
+    android:paddingEnd="@dimen/space_2"
+    android:paddingBottom="@dimen/space_2"
+    android:text="@string/meal_empty" />

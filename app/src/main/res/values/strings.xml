@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Калории</string>
+
+    <!-- Нижняя навигация -->
+    <string name="nav_diary">Дневник</string>
+    <string name="nav_profile">Профиль</string>
+
+    <!-- Дневник -->
+    <string name="diary_prev_day">Предыдущий день</string>
+    <string name="diary_next_day">Следующий день</string>
+    <string name="diary_today">Сегодня</string>
+    <string name="diary_remaining">Осталось</string>
+    <string name="diary_over">Перебор</string>
+    <string name="diary_of_target">из %1$d ккал</string>
+    <string name="diary_macros_title">Макросы</string>
+    <string name="diary_macro_carbs">Углеводы</string>
+    <string name="diary_macro_fat">Жиры</string>
+    <string name="diary_macro_protein">Белки</string>
+    <string name="diary_meals_title">Приёмы пищи</string>
+    <string name="diary_fab_gallery">Из галереи</string>
+    <string name="diary_fab_camera">Сфоткать</string>
+    <string name="diary_pick_photo">Выберите фото еды</string>
+
+    <!-- Приёмы пищи -->
+    <string name="meal_breakfast">Завтрак</string>
+    <string name="meal_lunch">Обед</string>
+    <string name="meal_dinner">Ужин</string>
+    <string name="meal_snack">Перекус</string>
+    <string name="meal_add_to">Добавить в этот приём пищи</string>
+    <string name="meal_empty">Ничего не добавлено</string>
+
+    <!-- Запись -->
+    <string name="entry_photo">Фото блюда</string>
+    <string name="entry_delete">Удалить запись</string>
+    <string name="entry_portion">порция</string>
+
+    <!-- Диалог записи -->
+    <string name="entry_field_label">Название</string>
+    <string name="entry_name_hint">Название</string>
+    <string name="entry_meal_label">Приём пищи</string>
+    <string name="entry_info_per_100">Калории и макро на 100 г</string>
+    <string name="entry_info_per_portion">Калории и макро</string>
+    <string name="entry_amount">Количество</string>
+    <string name="entry_grams_hint">г</string>
+    <string name="entry_grams_unknown">вес неизвестен</string>
+    <string name="entry_kcal_per_100">ккал / 100 г</string>
+    <string name="entry_protein_g">белки, г</string>
+    <string name="entry_fat_g">жиры, г</string>
+    <string name="entry_carbs_g">углеводы, г</string>
+    <string name="entry_result_head">Итого к записи</string>
+    <string name="entry_custom_product">Свой продукт</string>
+    <string name="entry_custom_food_button">Свой продукт</string>
+    <string name="entry_default_custom_name">Своё блюдо</string>
+    <string name="entry_vision_note">Модель оценила всю порцию на фото. Отредактируйте при желании.</string>
+    <string name="entry_portion_whole">вся порция</string>
+    <string name="entry_added_toast">Добавлено ✓</string>
+    <string name="entry_per_100_tail">(на 100 г)</string>
+
+    <!-- Общие действия диалогов -->
+    <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_save">Сохранить</string>
+    <string name="dialog_close">Закрыть</string>
+    <string name="dialog_add_by_photo">Добавить по фото</string>
+    <string name="dialog_add_manual">Добавить вручную</string>
+
+    <!-- Статусы и ошибки -->
+    <string name="diary_analyzing">Анализирую фото…</string>
+    <string name="diary_camera_failed">Не удалось получить фото</string>
+    <string name="vision_not_ready">Vision не инициализирован</string>
+    <string name="vision_failed">Не удалось распознать</string>
+    <string name="error_prefix">Ошибка: %1$s</string>
+    <string name="entry_deleted">«%1$s» удалено</string>
+    <string name="undo_action">Отменить</string>
+
+    <!-- Пикер продуктов -->
+    <string name="picker_title">Добавить вручную</string>
+    <string name="picker_search_hint">Поиск (напр. курица)</string>
+
+    <!-- Профиль -->
+    <string name="profile_title">Профиль</string>
+    <string name="profile_edit">Редактировать профиль</string>
+    <string name="profile_daily_norm">Дневная норма калорий</string>
+    <string name="profile_macro_placeholder">Б: — · Ж: — · У: —</string>
+    <string name="profile_empty">Заполните профиль</string>
+    <string name="profile_gender_age">%1$s, возраст %2$d</string>
+    <string name="profile_body">Рост %1$d см · Вес %2$s кг</string>
+    <string name="profile_bmr">Основной обмен ≈ %1$d ккал</string>
+    <string name="profile_macro_line">Б: %1$d г · Ж: %2$d г · У: %3$d г</string>
+    <string name="profile_gender_male">Мужчина</string>
+    <string name="profile_gender_female">Женщина</string>
+    <string name="profile_custom_norm">Своя норма: %1$d ккал/день\nБелки 30% · Жиры 30% · Углеводы 40%</string>
+    <string name="profile_formula">Формула: Миффлин-Сан Жеор\nБелки 30% · Жиры 30% · Углеводы 40%</string>
+
+    <!-- Онбординг -->
+    <string name="welcome_title">Давайте посчитаем вашу норму</string>
+    <string name="welcome_subtitle">Ответьте на пару вопросов — и я покажу, сколько калорий нужно в день. Потом поправим.</string>
+    <string name="welcome_gender">Пол</string>
+    <string name="welcome_male">Мужской</string>
+    <string name="welcome_female">Женский</string>
+    <string name="welcome_age">Возраст</string>
+    <string name="welcome_height">Рост, см</string>
+    <string name="welcome_weight">Вес, кг</string>
+    <string name="welcome_activity">Активность</string>
+    <string name="welcome_activity_low">Низкая</string>
+    <string name="welcome_activity_mid">Средняя</string>
+    <string name="welcome_activity_high">Высокая</string>
+    <string name="welcome_goal">Цель</string>
+    <string name="welcome_goal_lose">Худеть</string>
+    <string name="welcome_goal_keep">Держать</string>
+    <string name="welcome_goal_gain">Набрать</string>
+    <string name="welcome_custom_target">Своя норма калорий</string>
+    <string name="welcome_custom_target_hint">Сколько ккал в день</string>
+    <string name="welcome_norm_label">Ваша норма</string>
+    <string name="welcome_norm_unit">ккал в день</string>
+    <string name="welcome_norm_unit_custom">ккал в день · своя норма</string>
+    <string name="welcome_start">Начать считать</string>
+    <string name="welcome_edit_title">Ваша анкета</string>
+    <string name="welcome_edit_subtitle">Поправьте данные — норма пересчитается сразу.</string>
+    <string name="welcome_preview_fill">Заполните возраст, рост и вес</string>
+    <string name="welcome_preview_ranges">Проверьте диапазоны: 1–100 лет, 80–250 см, 20–300 кг</string>
+    <string name="welcome_preview_check_fields">Проверьте выделенные поля</string>
+    <string name="welcome_err_age">Укажите возраст (1–100)</string>
+    <string name="welcome_err_height">Укажите рост (80–250 см)</string>
+    <string name="welcome_err_weight">Укажите вес (20–300 кг)</string>
+    <string name="welcome_err_custom">Укажите норму (500–10000 ккал)</string>
+</resources>

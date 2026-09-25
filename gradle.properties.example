@@ -1,0 +1,13 @@
+# Скопируйте этот файл в gradle.properties и заполните значения.
+# gradle.properties в .gitignore и никогда не коммитится.
+
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+android.useAndroidX=true
+android.nonTransitiveRClass=true
+org.gradle.parallel=true
+org.gradle.caching=true
+
+# --- Vision Credentials (OpenAI-совместимый endpoint) ---
+# Пример: routerai.ru, или любой другой OpenAI-совместимый vision-провайдер.
+VISION_OPENAI_BASE_URL=https://routerai.ru/api/v1
+VISION_OPENAI_API_KEY=

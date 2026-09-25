@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/card_padding">
+
+        <!-- Превью фото (vision) + пометка модели. Для ручных записей скрыто.
+             Компактный ряд: крупная картинка вытесняла поле веса и «Итого к записи»
+             за пределы диалога, и их приходилось доскролливать. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgEntryPhoto"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_vertical"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/txtVisionNote"
+                style="@style/TextAppearance.Calorie.Micro"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/space_3"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:text=""
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/lblFor"
+            style="@style/TextAppearance.Calorie.FieldLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:text="@string/entry_field_label" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/boxEntryName"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_1"
+            android:hint="@string/entry_name_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtEntryName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/lblMeal"
+            style="@style/TextAppearance.Calorie.FieldLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:text="@string/entry_meal_label" />
+
+        <!-- ChipGroup, а не MaterialButtonToggleGroup: четыре кнопки в один ряд
+             не помещаются и текст обрезался до «За…»/«Об…». Чипы переносятся. -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/mealGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_1"
+            app:selectionRequired="true"
+            app:singleLine="false"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnMealBreakfast"
+                style="@style/Widget.Calorie.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/meal_breakfast" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnMealLunch"
+                style="@style/Widget.Calorie.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/meal_lunch" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnMealDinner"
+                style="@style/Widget.Calorie.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/meal_dinner" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btnMealSnack"
+                style="@style/Widget.Calorie.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/meal_snack" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <TextView
+            android:id="@+id/lblInfo"
+            style="@style/TextAppearance.Calorie.FieldLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:text="@string/entry_info_per_100" />
+
+        <TextView
+            android:id="@+id/txtPer100"
+            style="@style/TextAppearance.Calorie.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_1"
+            android:text="—" />
+
+        <!-- Свой продукт: КБЖУ на 100 г -->
+        <LinearLayout
+            android:id="@+id/lnlCustomMacros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_2"
+                    android:layout_weight="1"
+                    android:hint="@string/entry_kcal_per_100">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtCustomKcal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/entry_protein_g">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtCustomProtein"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_2"
+                    android:layout_weight="1"
+                    android:hint="@string/entry_fat_g">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtCustomFat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/entry_carbs_g">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtCustomCarbs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/boxGrams"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3"
+            android:hint="@string/entry_amount"
+            app:suffixText="@string/entry_grams_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtGrams"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="@dimen/space_4"
+            android:background="@color/outline" />
+
+        <TextView
+            android:id="@+id/txtResultHead"
+            style="@style/TextAppearance.Calorie.FieldLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/entry_result_head" />
+
+        <TextView
+            android:id="@+id/txtResult"
+            style="@style/TextAppearance.Calorie.BodyStrong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_1"
+            android:text="—" />
+    </LinearLayout>
+</ScrollView>

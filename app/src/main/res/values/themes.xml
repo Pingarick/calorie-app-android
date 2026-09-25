@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- DayNight, а не Light: набор тёмных ресурсов лежит в values-night. -->
+    <style name="Theme.Calorie" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/calorie_primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/calorie_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/text_primary</item>
+        <item name="colorSecondary">@color/calorie_accent</item>
+
+        <item name="colorSurface">@color/card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorOutline">@color/outline</item>
+
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+
+        <!-- Зелёный статус-бар в светлой теме, тёмный — в тёмной; иконки всегда светлые. -->
+        <item name="android:statusBarColor">@color/calorie_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Calorie.Dialog</item>
+    </style>
+
+    <!-- Диалоги не должны «протекать» бейзлайновым M3-цветом поверхности. -->
+    <style name="ThemeOverlay.Calorie.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+    </style>
+
+</resources>

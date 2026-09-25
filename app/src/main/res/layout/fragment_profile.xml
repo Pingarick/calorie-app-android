@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/card_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextAppearance.Calorie.ScreenTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/profile_title" />
+
+            <ImageButton
+                android:id="@+id/btnEditProfile"
+                android:layout_width="@dimen/touch_target"
+                android:layout_height="@dimen/touch_target"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/profile_edit"
+                android:src="@drawable/ic_edit"
+                app:tint="@color/text_secondary" />
+        </LinearLayout>
+
+        <!-- Hero: норма на день -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.Calorie.CardFlat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3"
+            app:cardBackgroundColor="@color/calorie_primary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/card_padding">
+
+                <TextView
+                    style="@style/TextAppearance.Calorie.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_daily_norm"
+                    android:textColor="@color/on_primary" />
+
+                <TextView
+                    android:id="@+id/txtDailyTarget"
+                    style="@style/TextAppearance.Calorie.HeroBig"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_1"
+                    android:textColor="@color/on_primary"
+                    tools:text="2 000" />
+
+                <TextView
+                    android:id="@+id/txtMacroTarget"
+                    style="@style/TextAppearance.Calorie.BodyStrong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_1"
+                    android:text="@string/profile_macro_placeholder"
+                    android:textColor="@color/on_primary" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Детали профиля -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.Calorie.CardFlat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/card_padding">
+
+                <TextView
+                    android:id="@+id/txtGenderAge"
+                    style="@style/TextAppearance.Calorie.BodyStrong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtBody"
+                    style="@style/TextAppearance.Calorie.BodyStrong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_1" />
+
+                <TextView
+                    android:id="@+id/txtActivityGoal"
+                    style="@style/TextAppearance.Calorie.BodyStrong"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_1" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="@dimen/space_4"
+                    android:background="@color/outline" />
+
+                <TextView
+                    android:id="@+id/txtBmr"
+                    style="@style/TextAppearance.Calorie.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_secondary" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/txtCustomHint"
+            style="@style/TextAppearance.Calorie.Micro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3"
+            android:paddingHorizontal="@dimen/space_1"
+            android:textColor="@color/text_secondary" />
+    </LinearLayout>
+</ScrollView>

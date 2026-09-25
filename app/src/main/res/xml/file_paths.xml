@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Камера пишет снимок в filesDir/photos (см. DiaryFragment.startCamera), поэтому
+  FileProvider должен отдавать наружу именно этот каталог. С корнем cache-path
+  getUriForFile не находил файл и падал с IllegalArgumentException — приложение
+  вылетало при нажатии «Сфоткать».
+-->
+<paths>
+    <files-path name="photos" path="photos/" />
+</paths>

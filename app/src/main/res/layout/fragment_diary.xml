@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <com.calorie.app.ui.widget.DaySwipeScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- Свайп влево/вправо переключает день (см. DaySwipeScrollView).
+             Список приёмов пищи — FullHeightRecyclerView (см. класс): он меряется
+             с UNSPECIFIED-высотой, иначе LinearLayoutManager набивает строки лишь
+             до текущей высоты вью и хвост обрезается по сгибу (4 приёма + записи
+             не доскроллить при nestedScrollingEnabled=false). -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/screen_padding"
+            android:paddingEnd="@dimen/screen_padding"
+            android:paddingBottom="@dimen/diary_list_bottom_inset">
+
+            <!-- Навигация по дням -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnPrevDay"
+                    android:layout_width="@dimen/touch_target"
+                    android:layout_height="@dimen/touch_target"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/diary_prev_day"
+                    android:src="@drawable/ic_chevron_left" />
+
+                <TextView
+                    android:id="@+id/txtDay"
+                    style="@style/TextAppearance.Calorie.Section"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+
+                <ImageButton
+                    android:id="@+id/btnNextDay"
+                    android:layout_width="@dimen/touch_target"
+                    android:layout_height="@dimen/touch_target"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/diary_next_day"
+                    android:src="@drawable/ic_chevron_right" />
+            </LinearLayout>
+
+            <!-- Возврат к сегодня: виден только когда открыт прошлый день -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnToday"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:minWidth="0dp"
+                android:paddingHorizontal="@dimen/space_4"
+                android:text="@string/diary_today"
+                android:textColor="@color/calorie_primary"
+                android:textSize="@dimen/text_caption"
+                android:visibility="gone"
+                app:strokeColor="@color/calorie_primary" />
+
+            <!-- Кольцо прогресса калорий -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Calorie.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_3">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.calorie.app.ui.widget.CalorieRingView
+                            android:id="@+id/ringProgress"
+                            android:layout_width="@dimen/ring_size"
+                            android:layout_height="@dimen/ring_size"
+                            android:layout_gravity="center" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtTitleLeft"
+                                style="@style/TextAppearance.Calorie.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="@string/diary_remaining" />
+
+                            <TextView
+                                android:id="@+id/txtEaten"
+                                style="@style/TextAppearance.Calorie.Hero"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="1450" />
+
+                            <TextView
+                                android:id="@+id/txtTarget"
+                                style="@style/TextAppearance.Calorie.Micro"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="из 2100 ккал" />
+                        </LinearLayout>
+                    </FrameLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Макросы: три цветные полосы -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Calorie.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_3">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        style="@style/TextAppearance.Calorie.Caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/diary_macros_title" />
+
+                    <!-- Белки -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_3"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.Calorie.BodyStrong"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/diary_macro_protein"
+                            android:textColor="@color/macro_protein" />
+
+                        <TextView
+                            android:id="@+id/txtProtein"
+                            style="@style/TextAppearance.Calorie.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="0 / 150 г" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/barProtein"
+                        style="@style/Widget.Calorie.MacroBar"
+                        android:layout_width="match_parent"
+                        android:progressTint="@color/macro_protein"
+                        tools:progress="40" />
+
+                    <!-- Жиры -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_3"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.Calorie.BodyStrong"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/diary_macro_fat"
+                            android:textColor="@color/macro_fat" />
+
+                        <TextView
+                            android:id="@+id/txtFat"
+                            style="@style/TextAppearance.Calorie.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="0 / 66 г" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/barFat"
+                        style="@style/Widget.Calorie.MacroBar"
+                        android:layout_width="match_parent"
+                        android:progressTint="@color/macro_fat"
+                        tools:progress="55" />
+
+                    <!-- Углеводы -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_3"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.Calorie.BodyStrong"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/diary_macro_carbs"
+                            android:textColor="@color/macro_carbs" />
+
+                        <TextView
+                            android:id="@+id/txtCarbs"
+                            style="@style/TextAppearance.Calorie.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="0 / 200 г" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/barCarbs"
+                        style="@style/Widget.Calorie.MacroBar"
+                        android:layout_width="match_parent"
+                        android:progressTint="@color/macro_carbs"
+                        tools:progress="70" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Приёмы пищи -->
+            <TextView
+                style="@style/TextAppearance.Calorie.Section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_5"
+                android:layout_marginBottom="@dimen/space_1"
+                android:text="@string/diary_meals_title" />
+
+            <com.calorie.app.ui.widget.FullHeightRecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never" />
+        </LinearLayout>
+    </com.calorie.app.ui.widget.DaySwipeScrollView>
+
+    <!-- Добавление по фото: камера + галерея -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/space_4"
+        android:layout_marginBottom="@dimen/space_6"
+        android:orientation="vertical">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fabGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/diary_fab_gallery"
+            android:textColor="@color/calorie_primary"
+            app:backgroundTint="@color/card"
+            app:icon="@drawable/ic_add_photo"
+            app:iconTint="@color/calorie_primary" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fabCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3"
+            android:text="@string/diary_fab_camera"
+            android:textColor="@color/on_primary"
+            app:backgroundTint="@color/calorie_primary"
+            app:icon="@drawable/ic_camera"
+            app:iconTint="@color/on_primary" />
+    </LinearLayout>
+</FrameLayout>

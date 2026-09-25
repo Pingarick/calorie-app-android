@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Тёмная палитра. Имена совпадают с values/colors.xml — различаются только значения. -->
+<resources>
+
+    <!-- Бренд: на тёмном фоне зелёный должен быть светлее, иначе не читается. -->
+    <color name="calorie_primary">#7CC47F</color>
+    <color name="on_primary">#0E2A11</color>
+    <color name="calorie_primary_container">#1D3A21</color>
+    <color name="calorie_accent">#FFB74D</color>
+
+    <!-- Поверхности -->
+    <color name="background">#121412</color>
+    <color name="card">#1D201D</color>
+    <color name="surface_variant">#2A2E2A</color>
+    <color name="outline">#3A3F3A</color>
+
+    <!-- Текст -->
+    <color name="text_primary">#EDEFEC</color>
+    <color name="text_secondary">#9BA39B</color>
+
+    <!-- Макросы: те же три цвета, приподнятая светлота -->
+    <color name="macro_protein">#6EA8F5</color>
+    <color name="macro_fat">#C08CF5</color>
+    <color name="macro_carbs">#F5B942</color>
+
+    <!-- Акцент приёма пищи -->
+    <color name="meal_breakfast">#F5B942</color>
+    <color name="meal_lunch">#7CC47F</color>
+    <color name="meal_dinner">#8E90F5</color>
+    <color name="meal_snack">#F070B0</color>
+
+    <!-- Состояния -->
+    <color name="danger">#FF6B67</color>
+    <color name="ring_track">#2C322C</color>
+</resources>

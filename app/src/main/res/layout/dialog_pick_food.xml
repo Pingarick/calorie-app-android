@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/card"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtPickTitle"
+        style="@style/TextAppearance.Calorie.Section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/card_padding"
+        android:layout_marginTop="@dimen/space_5"
+        android:layout_marginEnd="@dimen/card_padding"
+        android:text="@string/picker_title" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/boxSearch"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/screen_padding"
+        android:layout_marginTop="@dimen/space_3"
+        android:layout_marginEnd="@dimen/screen_padding"
+        android:hint="@string/picker_search_hint"
+        app:startIconDrawable="@drawable/ic_search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSearch"
+            android:importantForAutofill="no"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCustomFood"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/card_padding"
+        android:layout_marginTop="@dimen/space_3"
+        android:layout_marginEnd="@dimen/card_padding"
+        android:text="@string/entry_custom_food_button"
+        android:textColor="@color/calorie_primary"
+        app:icon="@drawable/ic_add"
+        app:iconGravity="textStart"
+        app:strokeColor="@color/calorie_primary" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerFoods"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/space_2"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:paddingBottom="@dimen/space_3" />
+</LinearLayout>
