@@ -166,4 +166,10 @@
     <string name="cart_save">Сохранить</string>
     <string name="cart_empty">Соберите рацион — корзина появится сама</string>
 
+    <!-- Рецепт -->
+    <string name="recipe_ingredients">Ингредиенты</string>
+    <string name="recipe_steps">Как готовить</string>
+    <string name="recipe_generate">Сгенерировать шаги</string>
+    <string name="recipe_close">Закрыть</string>
+
 </resources>

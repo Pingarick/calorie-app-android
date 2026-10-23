@@ -18,7 +18,8 @@ class PlanAdapter(
     private val onCook: (PlanItem) -> Unit,
     private val onReplace: (PlanItem) -> Unit,
     private val onRemove: (PlanItem) -> Unit,
-    private val onPostpone: (PlanItem) -> Unit
+    private val onPostpone: (PlanItem) -> Unit,
+    private val onOpen: (PlanItem) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var rows: List<PlanRow> = emptyList()
@@ -48,7 +49,7 @@ class PlanAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val row = rows[position]) {
             is PlanRow.MealHeader -> (holder as HeaderHolder).bind(row)
-            is PlanRow.EntryRow -> (holder as EntryHolder).bind(row, onCook, onReplace, onRemove, onPostpone)
+            is PlanRow.EntryRow -> (holder as EntryHolder).bind(row, onCook, onReplace, onRemove, onPostpone, onOpen)
             is PlanRow.EmptySlot -> Unit
         }
     }
@@ -72,7 +73,8 @@ class PlanAdapter(
             onCook: (PlanItem) -> Unit,
             onReplace: (PlanItem) -> Unit,
             onRemove: (PlanItem) -> Unit,
-            onPostpone: (PlanItem) -> Unit
+            onPostpone: (PlanItem) -> Unit,
+            onOpen: (PlanItem) -> Unit
         ) {
             val item = row.item
             b.txtDishTitle.text = row.dish.title
@@ -87,7 +89,8 @@ class PlanAdapter(
             b.btnCook.setOnClickListener { onCook(item) }
             b.btnReplace.setOnClickListener { onReplace(item) }
             b.btnRemove.setOnClickListener { onRemove(item) }
-            // Долгое нажатие — «не сегодня»: убрать и запомнить, что блюдо отложили.
+            // Тап по карточке открывает рецепт; долгое нажатие — «не сегодня».
+            b.root.setOnClickListener { onOpen(item) }
             b.root.setOnLongClickListener {
                 onPostpone(item)
                 true

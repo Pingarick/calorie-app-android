@@ -13,6 +13,13 @@
         <item name="colorSecondaryContainer">@color/calorie_primary_container</item>
         <item name="colorOnSecondaryContainer">@color/calorie_primary</item>
 
+        <!-- M3-диалоги и меню берут фон из surfaceContainer*; без этого
+             карточки рецепта и шторки оставались сиреневыми от базовой темы. -->
+        <item name="colorSurfaceContainerLow">@color/card</item>
+        <item name="colorSurfaceContainer">@color/card</item>
+        <item name="colorSurfaceContainerHigh">@color/card</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_variant</item>
+
         <item name="colorSurface">@color/card</item>
         <item name="colorOnSurface">@color/text_primary</item>
         <item name="colorSurfaceVariant">@color/surface_variant</item>

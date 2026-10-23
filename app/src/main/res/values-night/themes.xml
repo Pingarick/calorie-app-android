@@ -8,12 +8,18 @@
         <item name="colorPrimaryContainer">@color/calorie_primary_container</item>
         <item name="colorOnPrimaryContainer">@color/text_primary</item>
         <item name="colorSecondary">@color/calorie_accent</item>
+        <item name="colorSecondaryContainer">@color/calorie_primary_container</item>
+        <item name="colorOnSecondaryContainer">@color/calorie_primary</item>
 
         <item name="colorSurface">@color/card</item>
         <item name="colorOnSurface">@color/text_primary</item>
         <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorOnSurfaceVariant">@color/text_secondary</item>
         <item name="colorOutline">@color/outline</item>
+        <item name="colorSurfaceContainerLow">@color/card</item>
+        <item name="colorSurfaceContainer">@color/card</item>
+        <item name="colorSurfaceContainerHigh">@color/card</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_variant</item>
 
         <item name="android:colorBackground">@color/background</item>
         <item name="colorOnBackground">@color/text_primary</item>

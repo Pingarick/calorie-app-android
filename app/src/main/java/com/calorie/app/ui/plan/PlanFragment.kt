@@ -10,7 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.calorie.app.R
+import com.calorie.app.databinding.DialogRecipeBinding
 import com.calorie.app.databinding.FragmentPlanBinding
+import com.calorie.app.util.weight
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
 /** Экран рациона: день недели, сводка и список приёмов пищи. */
@@ -19,6 +22,7 @@ class PlanFragment : Fragment(R.layout.fragment_plan) {
     private var _b: FragmentPlanBinding? = null
     private val b get() = _b!!
     private val vm: PlanViewModel by viewModels()
+    private val recipeVm: RecipeViewModel by viewModels()
     private lateinit var adapter: PlanAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,7 +32,8 @@ class PlanFragment : Fragment(R.layout.fragment_plan) {
             onCook = { vm.cook(it) },
             onReplace = { vm.replace(it) },
             onRemove = { vm.remove(it) },
-            onPostpone = { vm.postpone(it) }
+            onPostpone = { vm.postpone(it) },
+            onOpen = { showRecipe(it) }
         )
         b.recycler.layoutManager = LinearLayoutManager(requireContext())
         b.recycler.adapter = adapter
@@ -93,5 +98,46 @@ class PlanFragment : Fragment(R.layout.fragment_plan) {
     override fun onDestroyView() {
         _b = null
         super.onDestroyView()
+    }
+
+    /** Диалог рецепта: состав под текущую порцию и шаги, если их уже генерировали. */
+    private fun showRecipe(item: com.calorie.app.data.local.model.PlanItem) {
+        val binding = DialogRecipeBinding.inflate(layoutInflater)
+        binding.btnRecipeGenerate.setOnClickListener { recipeVm.generate() }
+
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(binding.root)
+            .setNegativeButton(R.string.recipe_close, null)
+            .create()
+
+        val job = viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                recipeVm.state.collect { state -> renderRecipe(binding, state) }
+            }
+        }
+        dialog.setOnDismissListener { job.cancel() }
+        dialog.show()
+        recipeVm.open(item.dishId, item.servings)
+    }
+
+    private fun renderRecipe(b: DialogRecipeBinding, state: RecipeUiState) {
+        b.tvRecipeTitle.text = state.title
+        b.tvRecipePortion.text = state.portion
+        b.tvRecipePortion.visibility = if (state.portion.isBlank()) View.GONE else View.VISIBLE
+
+        b.tvRecipeIngredients.text = state.ingredients.joinToString("\n") { line ->
+            "• ${line.name} — ${weight(line.grams)}"
+        }
+
+        b.tvRecipeSteps.text = state.steps.mapIndexed { index, step ->
+            val timer = step.timerMin?.let { " · таймер $it мин" }.orEmpty()
+            "${index + 1}. ${step.text}$timer"
+        }.joinToString("\n\n")
+
+        b.tvRecipeError.text = state.error
+        b.tvRecipeError.visibility = if (state.error == null) View.GONE else View.VISIBLE
+        b.progressRecipe.visibility = if (state.loading) View.VISIBLE else View.GONE
+        b.btnRecipeGenerate.visibility =
+            if (!state.hasRecipe && !state.loading) View.VISIBLE else View.GONE
     }
 }

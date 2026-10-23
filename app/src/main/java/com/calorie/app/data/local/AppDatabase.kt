@@ -13,6 +13,7 @@ import com.calorie.app.data.local.model.PlanItem
 import com.calorie.app.data.local.model.Preference
 import com.calorie.app.data.local.model.PreferenceEvent
 import com.calorie.app.data.local.model.Product
+import com.calorie.app.data.local.model.Recipe
 import com.calorie.app.data.local.model.UserProfile
 
 const val DB_NAME = "calorie.db"
@@ -26,9 +27,10 @@ const val DB_NAME = "calorie.db"
         DishIngredient::class,
         PlanItem::class,
         PreferenceEvent::class,
-        Preference::class
+        Preference::class,
+        Recipe::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -38,6 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun dishDao(): DishDao
     abstract fun planDao(): PlanDao
     abstract fun preferenceDao(): PreferenceDao
+    abstract fun recipeDao(): RecipeDao
 
     companion object {
         @Volatile
@@ -152,12 +155,28 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        /** Версия 5: кэш пошаговых рецептов по блюду. */
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `recipe` (
+                        `dishId` TEXT NOT NULL,
+                        `stepsJson` TEXT NOT NULL,
+                        `updatedAt` INTEGER NOT NULL,
+                        PRIMARY KEY(`dishId`)
+                    )
+                    """.trimIndent()
+                )
+            }
+        }
+
         fun get(context: Context): AppDatabase =            INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     DB_NAME
-                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build().also { INSTANCE = it }
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5).build().also { INSTANCE = it }
             }
     }
 }
