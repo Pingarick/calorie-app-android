@@ -84,6 +84,8 @@ class PlanEditor(private val db: AppDatabase) {
         protein = protein,
         fat = fat,
         carbs = carbs,
+        batchServings = batchServings,
+        leftover = leftover,
         orderIndex = orderIndex
     )
 

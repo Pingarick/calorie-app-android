@@ -137,4 +137,23 @@ class CartCalculatorTest {
         assertTrue(cart.isEmpty)
         assertEquals(0.0, cart.total, 1e-9)
     }
+
+    @Test
+    fun batchIsShoppedOnceAndLeftoversAreFree() {
+        val soup = item("soup", 1.2).copy(batchServings = 3.0)
+        val leftover = item("soup", 1.0).copy(
+            dateKey = "2026-10-23",
+            batchServings = 0.0,
+            leftover = true
+        )
+        val cart = CartCalculator.build(
+            plan = listOf(soup, leftover),
+            dishes = mapOf("soup" to dish("soup")),
+            ingredients = mapOf("soup" to listOf(DishIngredient("soup", "p", 100.0))),
+            products = mapOf("p" to product("p", 40.0))
+        )
+        // 100 г × 1.2 × 3 порции = 360 г; остаток не добавляет покупок.
+        assertEquals(360.0, cart.sections.first().lines.first().grams, 1e-9)
+        assertEquals(144.0, cart.total, 1e-9)
+    }
 }

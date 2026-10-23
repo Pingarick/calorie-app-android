@@ -34,7 +34,7 @@ const val DB_NAME = "calorie.db"
         PantryItem::class,
         ChatMessage::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -204,12 +204,21 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        /** Версия 7: большие блюда и остатки. */
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `dish` ADD COLUMN `batchServings` INTEGER NOT NULL DEFAULT 1")
+                db.execSQL("ALTER TABLE `plan_item` ADD COLUMN `batchServings` REAL NOT NULL DEFAULT 1")
+                db.execSQL("ALTER TABLE `plan_item` ADD COLUMN `leftover` INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         fun get(context: Context): AppDatabase =            INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     DB_NAME
-                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6).build().also { INSTANCE = it }
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7).build().also { INSTANCE = it }
             }
     }
 }

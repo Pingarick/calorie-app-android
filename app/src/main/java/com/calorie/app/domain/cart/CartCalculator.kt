@@ -49,11 +49,15 @@ object CartCalculator {
     ): CartTotal {
         val grams = HashMap<String, Double>()
         for (item in plan) {
+            // Остатки уже куплены в составе кастрюли: не считаем их второй раз.
+            if (item.leftover) continue
             val dish = dishes[item.dishId] ?: continue
             val recipe = ingredients[dish.id] ?: continue
+            // Закупаемся на всю кастрюлю: порций batchServings, каждая размера servings.
+            val factor = item.servings * item.batchServings
             for (ingredient in recipe) {
                 grams[ingredient.productId] =
-                    (grams[ingredient.productId] ?: 0.0) + ingredient.gramsPerServing * item.servings
+                    (grams[ingredient.productId] ?: 0.0) + ingredient.gramsPerServing * factor
             }
         }
 

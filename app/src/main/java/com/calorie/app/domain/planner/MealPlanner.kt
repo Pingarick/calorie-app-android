@@ -24,7 +24,10 @@ data class PlannedMeal(
     val slot: MealSlot,
     val dish: Dish,
     val servings: Double,
-    val orderIndex: Int
+    val orderIndex: Int,
+    /** Сколько порций готовится сразу. Для остатков 0. */
+    val batchServings: Double = 1.0,
+    val leftover: Boolean = false
 ) {
     val kcal: Double get() = dish.kcalPerServing * servings
     val protein: Double get() = dish.proteinPerServing * servings
@@ -88,19 +91,59 @@ object MealPlanner {
     ): List<PlannedMeal> {
         val usage = HashMap<String, Int>()
         val result = ArrayList<PlannedMeal>(dates.size * MealSlot.entries.size)
+        val leftoverDish = HashMap<MealSlot, Dish>()
+        val leftoverCount = HashMap<MealSlot, Int>()
 
-        for (date in dates) {
+        dates.forEachIndexed { dayIndex, date ->
             val day = ArrayList<PlannedMeal>(MealSlot.entries.size)
             for (slot in MealSlot.entries) {
+                // Сначала закрываем остатки от прошлой кастрюли: их не готовим и не покупаем.
+                val pending = leftoverCount[slot] ?: 0
+                val pendingDish = leftoverDish[slot]
+                if (pending > 0 && pendingDish != null) {
+                    leftoverCount[slot] = pending - 1
+                    day += PlannedMeal(
+                        dateKey = date,
+                        slot = slot,
+                        dish = pendingDish,
+                        servings = 1.0,
+                        orderIndex = slot.ordinal,
+                        batchServings = 0.0,
+                        leftover = true
+                    )
+                    continue
+                }
+
                 val pool = candidates.getValue(slot)
                 val fresh = pool.filter { (usage[it.id] ?: 0) < MAX_USES }
                 val from = if (fresh.isEmpty()) pool else fresh
-                val dish = from.maxByOrNull { dish ->
-                    val pref = preferences[dish.id] ?: DishPreference()
-                    baseScore(dish, usage[dish.id] ?: 0, pref, now) + random.nextDouble() * 0.35
+                val dish = from.maxByOrNull { candidate ->
+                    val pref = preferences[candidate.id] ?: DishPreference()
+                    baseScore(candidate, usage[candidate.id] ?: 0, pref, now) + random.nextDouble() * 0.35
                 } ?: continue
                 usage[dish.id] = (usage[dish.id] ?: 0) + 1
-                day += PlannedMeal(date, slot, dish, 1.0, slot.ordinal)
+
+                // Большое блюдо варится один раз и закрывает до трёх приёмов пищи.
+                val daysLeft = dates.size - dayIndex
+                val portions = if (dish.batchServings > 1) {
+                    minOf(dish.batchServings - 1, daysLeft - 1, 2)
+                } else {
+                    0
+                }
+                if (portions > 0) {
+                    leftoverDish[slot] = dish
+                    leftoverCount[slot] = portions
+                }
+
+                day += PlannedMeal(
+                    dateKey = date,
+                    slot = slot,
+                    dish = dish,
+                    servings = 1.0,
+                    orderIndex = slot.ordinal,
+                    batchServings = (1 + portions).toDouble(),
+                    leftover = false
+                )
             }
             fitDay(day, targetKcal)
             result += day
@@ -122,7 +165,8 @@ object MealPlanner {
         val recency = PreferenceEngine.recencyPenalty(pref.lastCookedAt, now)
         val singleSlot = if (dish.slots.split(',').size == 1) 0.2 else 0.0
         val quicker = (60 - dish.timeMin.coerceAtMost(60)) / 300.0
-        return pref.weight + novelty * 0.8 - used * 1.2 + recency + singleSlot + quicker
+        val bulk = if (dish.batchServings > 1) 0.15 else 0.0
+        return pref.weight + novelty * 0.8 - used * 1.2 + recency + singleSlot + quicker + bulk
     }
 
     /** Масштабирует порции дня под цель, зажимая их в разумный диапазон. */

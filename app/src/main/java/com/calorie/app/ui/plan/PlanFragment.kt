@@ -117,7 +117,7 @@ class PlanFragment : Fragment(R.layout.fragment_plan) {
         }
         dialog.setOnDismissListener { job.cancel() }
         dialog.show()
-        recipeVm.open(item.dishId, item.servings)
+        recipeVm.open(item.dishId, item.servings, item.batchServings)
     }
 
     private fun renderRecipe(b: DialogRecipeBinding, state: RecipeUiState) {

@@ -78,7 +78,8 @@ class PlanAdapter(
         ) {
             val item = row.item
             b.txtDishTitle.text = row.dish.title
-            b.txtDishMeta.text = String.format(
+            val prefix = if (item.leftover) "остатки · " else ""
+            b.txtDishMeta.text = prefix + String.format(
                 Locale.US,
                 "%.1f порц. · %d г · Б %.0f · Ж %.0f · У %.0f",
                 item.servings, item.grams.toInt(), item.protein, item.fat, item.carbs

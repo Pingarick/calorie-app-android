@@ -32,6 +32,8 @@ data class Dish(
     val technique: String = "плита",
     val timeMin: Int,
     val baseServings: Int = 1,
+    /** Сколько порций выходит за одну готовку. Больше 1 — блюдо варится на несколько дней. */
+    @ColumnInfo(defaultValue = "1") val batchServings: Int = 1,
     /** Суммарный вес порции, г. */
     val gramsPerServing: Double,
     val kcalPerServing: Double,
@@ -62,6 +64,10 @@ data class PlanItem(
     val protein: Double,
     val fat: Double,
     val carbs: Double,
+    /** Сколько порций готовится сразу. Для остатков 0: готовить не нужно. */
+    @ColumnInfo(defaultValue = "1") val batchServings: Double = 1.0,
+    /** Порция из вчерашней кастрюли: не покупаем продукты и не готовим. */
+    @ColumnInfo(defaultValue = "0") val leftover: Boolean = false,
     /** Заблокированная запись не пересобирается автоматически. */
     val locked: Boolean = false,
     /** Отмечено «приготовил» — попало в дневник. */

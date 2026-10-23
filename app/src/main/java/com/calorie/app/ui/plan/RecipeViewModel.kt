@@ -38,7 +38,7 @@ class RecipeViewModel(app: Application) : AndroidViewModel(app) {
     private var dishId: String? = null
     private var servings: Double = 1.0
 
-    fun open(id: String, amount: Double) {
+    fun open(id: String, amount: Double, batchServings: Double = 1.0) {
         dishId = id
         servings = amount
         _state.value = RecipeUiState(dishId = id, loading = true)
@@ -47,9 +47,11 @@ class RecipeViewModel(app: Application) : AndroidViewModel(app) {
             val data = withContext(Dispatchers.IO) {
                 val dish = db.dishDao().byId(id)
                 val products = db.productDao().all().associateBy { it.id }
+                // Для кастрюли показываем продукты на все порции, а не на одну тарелку.
+                val batchFactor = if (batchServings > 0) batchServings else 1.0
                 val lines = db.dishDao().ingredientsFor(id).mapNotNull { ingredient ->
                     products[ingredient.productId]?.let { product ->
-                        RecipeLine(product.name, ingredient.gramsPerServing * amount)
+                        RecipeLine(product.name, ingredient.gramsPerServing * amount * batchFactor)
                     }
                 }
                 Triple(dish, lines, repo.cached(id))
@@ -60,15 +62,26 @@ class RecipeViewModel(app: Application) : AndroidViewModel(app) {
                 return@launch
             }
             val steps = data.third.orEmpty()
-            _state.value = RecipeUiState(
-                dishId = id,
-                title = dish.title,
-                portion = String.format(
+            val portion = if (batchServings > 1) {
+                String.format(
+                    Locale.US,
+                    "%.1f порц. · %d г · готовим %d порции",
+                    amount,
+                    (dish.gramsPerServing * amount).toInt(),
+                    batchServings.toInt()
+                )
+            } else {
+                String.format(
                     Locale.US,
                     "%.1f порц. · %d г",
                     amount,
                     (dish.gramsPerServing * amount).toInt()
-                ),
+                )
+            }
+            _state.value = RecipeUiState(
+                dishId = id,
+                title = dish.title,
+                portion = portion,
                 ingredients = data.second,
                 steps = steps,
                 hasRecipe = steps.isNotEmpty()

@@ -47,6 +47,12 @@ interface DishDao {
 
     @Query("SELECT COUNT(*) FROM dish")
     suspend fun count(): Int
+
+    @Query("DELETE FROM dish")
+    suspend fun deleteAll()
+
+    @Query("DELETE FROM dish_ingredient")
+    suspend fun deleteAllIngredients()
 }
 
 @Dao
@@ -71,6 +77,9 @@ interface PlanDao {
 
     @Query("DELETE FROM plan_item WHERE dateKey BETWEEN :from AND :to")
     suspend fun clearRange(from: String, to: String)
+
+    @Query("DELETE FROM plan_item")
+    suspend fun deleteAll()
 
     @Query("DELETE FROM plan_item WHERE id = :id")
     suspend fun deleteById(id: Long)

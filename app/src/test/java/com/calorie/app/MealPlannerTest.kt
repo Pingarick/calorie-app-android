@@ -117,4 +117,31 @@ class MealPlannerTest {
         val justNow = MealPlanner.baseScore(dish, 0, DishPreference(lastCookedAt = now), now)
         assertTrue("justNow=$justNow monthAgo=$monthAgo", monthAgo > justNow)
     }
+
+    @Test
+    fun batchDishProducesLeftovers() {
+        val soup = dish("soup", MealSlot.LUNCH, 300.0).copy(batchServings = 4)
+        val pool = listOf(
+            dish("b1", MealSlot.BREAKFAST, 350.0),
+            dish("b2", MealSlot.BREAKFAST, 400.0),
+            soup,
+            dish("d1", MealSlot.DINNER, 540.0),
+            dish("d2", MealSlot.DINNER, 410.0),
+            dish("s1", MealSlot.SNACK, 180.0),
+            dish("s2", MealSlot.SNACK, 250.0)
+        )
+        val plan = MealPlanner.planWeek(dates, 2000, pool, seed = 5L)
+
+        val leftovers = plan.filter { it.leftover }
+        assertTrue("должны быть остатки", leftovers.isNotEmpty())
+        assertTrue("остатки только от супа", leftovers.all { it.dish.id == "soup" })
+
+        val firstSoup = plan.first { it.dish.id == "soup" && !it.leftover }
+        assertTrue("кастрюля минимум на 2 порции", firstSoup.batchServings >= 2.0)
+
+        plan.groupBy { it.dateKey }.forEach { (date, meals) ->
+            val kcal = meals.sumOf { it.kcal }
+            assertTrue("день $date: $kcal ккал", abs(kcal - 2000) <= 250)
+        }
+    }
 }
