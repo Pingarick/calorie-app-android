@@ -21,14 +21,14 @@ interface VisionSource {
 
 /**
  * Распознавание по фото через OpenAI-совместимый vision endpoint
- * (routerai.ru / Gemini-вид). Конфиг берётся из BuildConfig, который
+ * (DeepSeek `deepseek-flash`). Конфиг берётся из BuildConfig, который
  * заполняется на этапе сборки из gradle.properties переменных VISION_OPENAI_*.
  * Схема: POST {base}/chat/completions с multimodal-сообщениями (text + base64 image).
  */
 class RouterVisionSource(
     private val apiKey: String = BuildConfig.VISION_API_KEY,
     baseUrl: String = BuildConfig.VISION_BASE_URL,
-    override val modelName: String = "google/gemini-3.1-flash-lite-image"
+    override val modelName: String = "deepseek-flash"
 ) : VisionSource {
 
     private val gson = Gson()
@@ -82,6 +82,10 @@ class RouterVisionSource(
                 .build()
             client.newCall(req).execute().use { resp ->
                 val text = resp.body?.string().orEmpty()
+                if (!resp.isSuccessful) {
+                    // 401 — ключ, 402 — баланс, 429 — лимит: без кода ошибки на экране не понять причину.
+                    return@withContext NutritionEstimate.fail("HTTP ${resp.code}: " + text.take(200))
+                }
                 val parsed = gson.fromJson(text, ChatResponse::class.java)
                 parsed.error?.message?.let { err ->
                     return@withContext NutritionEstimate.fail(err)

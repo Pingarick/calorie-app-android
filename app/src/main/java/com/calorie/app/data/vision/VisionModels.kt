@@ -61,19 +61,29 @@ data class NutritionEstimate(
 internal data class ChatRequest(
     val model: String,
     val messages: List<ReqMessage>,
-    @SerializedName("temperature") val temperature: Double=0.2,
+    @SerializedName("temperature") val temperature: Double = 0.2,
     @SerializedName("max_tokens") val maxTokens: Int = 1024,
-    val responseFormat: RespFmt? = RespFmt()
+    @SerializedName("response_format") val responseFormat: RespFmt? = RespFmt(),
+    /**
+     * DeepSeek включает thinking по умолчанию. Для распознавания фото он не нужен:
+     * только съедает бюджет max_tokens и время ответа.
+     */
+    val thinking: Thinking = Thinking()
 )
 
 internal data class RespFmt(val type: String = "json_object")
+internal data class Thinking(val type: String = "disabled")
 internal data class ReqMessage(val role: String, val content: List<ContentPart>)
 internal data class ContentPart(
     val type: String, // "text" | "image_url"
     val text: String? = null,
     @SerializedName("image_url") val imageUrl: ImageUrl? = null
 )
-internal data class ImageUrl(val url: String)
+internal data class ImageUrl(
+    val url: String,
+    /** low — модель сжимает фото до 512×512: для оценки блюда достаточно и дешевле по токенам. */
+    val detail: String = "low"
+)
 
 internal data class ChatResponse(
     val choices: List<Choice>? = null,
