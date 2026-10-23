@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Calorie.CardFlat"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/space_2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_3">
+
+        <TextView
+            android:id="@+id/txtProduct"
+            style="@style/TextAppearance.Calorie.BodyStrong"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Куриная грудка" />
+
+        <TextView
+            android:id="@+id/txtAmount"
+            style="@style/TextAppearance.Calorie.Micro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_3"
+            tools:text="1.2 кг" />
+
+        <TextView
+            android:id="@+id/txtPrice"
+            style="@style/TextAppearance.Calorie.BodyStrong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="456 ₽" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -8,6 +8,10 @@
         <item name="colorPrimaryContainer">@color/calorie_primary_container</item>
         <item name="colorOnPrimaryContainer">@color/text_primary</item>
         <item name="colorSecondary">@color/calorie_accent</item>
+        <!-- Индикатор выбранной вкладки в M3 красится в secondaryContainer;
+             без этого он оставался фиолетовым от базовой темы. -->
+        <item name="colorSecondaryContainer">@color/calorie_primary_container</item>
+        <item name="colorOnSecondaryContainer">@color/calorie_primary</item>
 
         <item name="colorSurface">@color/card</item>
         <item name="colorOnSurface">@color/text_primary</item>
