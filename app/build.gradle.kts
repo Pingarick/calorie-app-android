@@ -108,3 +108,9 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
+
+// Экспорт схемы Room: по JSON видно, что именно ожидает база, и миграции
+// проверяются глазами, а не падением на устройстве.
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
