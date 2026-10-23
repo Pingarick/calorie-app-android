@@ -17,6 +17,7 @@ import com.calorie.app.data.local.model.Gender
 import com.calorie.app.data.local.model.Goal
 import com.calorie.app.data.local.model.UserProfile
 import com.calorie.app.databinding.FragmentProfileBinding
+import com.calorie.app.ui.prefs.KnownPrefsActivity
 import com.calorie.app.util.dailyTargetKcal
 import com.calorie.app.util.macroTargets
 import kotlinx.coroutines.launch
@@ -46,6 +47,10 @@ class ProfileFragment : Fragment() {
                 Intent(requireContext(), WelcomeActivity::class.java)
                     .putExtra(WelcomeActivity.EXTRA_EDIT, true)
             )
+        }
+
+        b.btnKnownPrefs.setOnClickListener {
+            startActivity(Intent(requireContext(), KnownPrefsActivity::class.java))
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

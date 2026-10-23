@@ -25,6 +25,11 @@
             android:name=".ui.main.MainActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.prefs.KnownPrefsActivity"
+            android:exported="false"
+            android:label="@string/known_title" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

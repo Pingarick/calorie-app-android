@@ -124,4 +124,46 @@
     <string name="welcome_err_height">Укажите рост (80–250 см)</string>
     <string name="welcome_err_weight">Укажите вес (20–300 кг)</string>
     <string name="welcome_err_custom">Укажите норму (500–10000 ккал)</string>
+    <!-- Рацион -->
+    <string name="nav_plan">Рацион</string>
+    <string name="plan_generate">Собрать неделю</string>
+    <string name="plan_generating">Собираю…</string>
+    <string name="plan_summary">План: %1$d из %2$d ккал</string>
+    <string name="plan_empty">Рацион не собран</string>
+    <string name="plan_hint">Соберите неделю: блюда можно менять, а приготовленное уходит в дневник.</string>
+    <string name="plan_empty_slot">Ничего не запланировано</string>
+    <string name="plan_cook">Приготовил</string>
+    <string name="plan_replace">Заменить</string>
+    <string name="plan_remove">Убрать</string>
+
+    <!-- Что я знаю -->
+    <string name="profile_known">Что я знаю о тебе</string>
+    <string name="known_title">Что я знаю о тебе</string>
+    <string name="known_subtitle">Приложение учится на действиях: что готовили, что убирали, что откладывали. Любой вес можно поправить или удалить.</string>
+    <string name="known_empty">Пока ничего не выучено. Соберите рацион и отметьте блюда.</string>
+    <string name="known_liked">Любите</string>
+    <string name="known_disliked">Не любите</string>
+    <string name="known_neutral">Нейтрально</string>
+    <string name="known_meta">%1$s · вес %2$s · %3$s</string>
+    <string name="known_cooked_days">готовили %1$d дн. назад</string>
+    <string name="known_cooked_today">готовили сегодня</string>
+    <string name="known_never">ещё не готовили</string>
+    <string name="known_like">Люблю</string>
+    <string name="known_dislike">Не люблю</string>
+    <string name="known_forget">Забыть</string>
+    <string name="known_back">Назад</string>
+
+    <!-- Покупки -->
+    <string name="nav_cart">Покупки</string>
+    <string name="cart_title">Покупки</string>
+    <string name="cart_total">Корзина: %1$s</string>
+    <string name="cart_budget_unset">Бюджет не задан — поставьте, чтобы видеть остаток</string>
+    <string name="cart_budget">Бюджет %1$s · остаток %2$s</string>
+    <string name="cart_budget_over">Бюджет %1$s · перебор %2$s</string>
+    <string name="cart_budget_button">Задать бюджет</string>
+    <string name="cart_budget_dialog">Бюджет на неделю</string>
+    <string name="cart_budget_hint">₽ на неделю</string>
+    <string name="cart_save">Сохранить</string>
+    <string name="cart_empty">Соберите рацион — корзина появится сама</string>
+
 </resources>

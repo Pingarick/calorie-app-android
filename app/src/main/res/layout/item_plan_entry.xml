@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Calorie.CardFlat"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/space_2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_3">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtDishTitle"
+                style="@style/TextAppearance.Calorie.CardTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                tools:text="Курица с гречкой и овощами" />
+
+            <TextView
+                android:id="@+id/txtDishMeta"
+                style="@style/TextAppearance.Calorie.Micro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="1.2 порции · 520 г · Б 56 · Ж 12 · У 60" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtDishKcal"
+            style="@style/TextAppearance.Calorie.BodyStrong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_2"
+            tools:text="690 ккал" />
+
+        <ImageButton
+            android:id="@+id/btnCook"
+            android:layout_width="@dimen/touch_target"
+            android:layout_height="@dimen/touch_target"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/plan_cook"
+            android:src="@drawable/ic_check"
+            android:tint="@color/calorie_primary" />
+
+        <ImageButton
+            android:id="@+id/btnReplace"
+            android:layout_width="@dimen/touch_target"
+            android:layout_height="@dimen/touch_target"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/plan_replace"
+            android:src="@drawable/ic_edit"
+            android:tint="@color/text_secondary" />
+
+        <ImageButton
+            android:id="@+id/btnRemove"
+            android:layout_width="@dimen/touch_target"
+            android:layout_height="@dimen/touch_target"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/plan_remove"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/text_secondary" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Заголовок приёма пищи в рационе: цвет полосы задаёт адаптер по слоту. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/space_5"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/mealAccent"
+        android:layout_width="@dimen/meal_accent_width"
+        android:layout_height="@dimen/meal_accent_height"
+        android:background="@drawable/meal_accent_bar"
+        android:importantForAccessibility="no" />
+
+    <TextView
+        android:id="@+id/txtMealTitle"
+        style="@style/TextAppearance.Calorie.CardTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_3"
+        android:layout_weight="1"
+        tools:text="Завтрак" />
+
+    <TextView
+        android:id="@+id/txtMealKcal"
+        style="@style/TextAppearance.Calorie.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="460 ккал" />
+</LinearLayout>

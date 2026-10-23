@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingTop="@dimen/space_1"
+        android:paddingEnd="@dimen/screen_padding">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="@dimen/touch_target"
+            android:layout_height="@dimen/touch_target"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/known_back"
+            android:src="@drawable/ic_chevron_left" />
+
+        <TextView
+            style="@style/TextAppearance.Calorie.Section"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_2"
+            android:layout_weight="1"
+            android:text="@string/known_title" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/TextAppearance.Calorie.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingTop="@dimen/space_1"
+        android:paddingEnd="@dimen/screen_padding"
+        android:text="@string/known_subtitle" />
+
+    <TextView
+        android:id="@+id/txtEmpty"
+        style="@style/TextAppearance.Calorie.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingTop="@dimen/space_6"
+        android:paddingEnd="@dimen/screen_padding"
+        android:gravity="center"
+        android:text="@string/known_empty"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingTop="@dimen/space_3"
+        android:paddingEnd="@dimen/screen_padding"
+        android:paddingBottom="@dimen/diary_list_bottom_inset"
+        tools:listitem="@layout/item_known_pref" />
+
+</LinearLayout>

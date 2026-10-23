@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.calorie.app.R
+import com.calorie.app.ui.plan.PlanFragment
 import com.calorie.app.ui.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -14,10 +15,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val nav = findViewById<BottomNavigationView>(R.id.bottomNav)
-        if (savedInstanceState == null) show(DiaryFragment(), TAG_DIARY)
+        if (savedInstanceState == null) show(PlanFragment(), TAG_PLAN)
 
         nav.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
+                R.id.nav_plan -> {
+                    show(PlanFragment(), TAG_PLAN)
+                    true
+                }
                 R.id.nav_profile -> {
                     show(ProfileFragment(), TAG_PROFILE)
                     true
@@ -45,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private companion object {
+        const val TAG_PLAN = "tab_plan"
         const val TAG_DIARY = "tab_diary"
         const val TAG_PROFILE = "tab_profile"
     }
