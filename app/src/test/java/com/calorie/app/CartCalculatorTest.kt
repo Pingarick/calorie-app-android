@@ -110,4 +110,31 @@ class CartCalculatorTest {
         )
         assertTrue(cart.isEmpty)
     }
+
+    @Test
+    fun pantrySubtractsFromRequiredAmount() {
+        val cart = CartCalculator.build(
+            plan = listOf(item("a", 2.0)),
+            dishes = mapOf("a" to dish("a")),
+            ingredients = mapOf("a" to listOf(DishIngredient("a", "p", 100.0))),
+            products = mapOf("p" to product("p", 40.0)),
+            pantry = mapOf("p" to 100.0)
+        )
+        // Нужно 200 г, дома 100 г — покупаем 100 г за 40 ₽.
+        assertEquals(100.0, cart.sections.first().lines.first().grams, 1e-9)
+        assertEquals(40.0, cart.total, 1e-9)
+    }
+
+    @Test
+    fun pantryCoversProductCompletely() {
+        val cart = CartCalculator.build(
+            plan = listOf(item("a", 1.0)),
+            dishes = mapOf("a" to dish("a")),
+            ingredients = mapOf("a" to listOf(DishIngredient("a", "p", 100.0))),
+            products = mapOf("p" to product("p", 40.0)),
+            pantry = mapOf("p" to 500.0)
+        )
+        assertTrue(cart.isEmpty)
+        assertEquals(0.0, cart.total, 1e-9)
+    }
 }

@@ -10,9 +10,8 @@ import com.calorie.app.data.local.model.PlanItem
 import com.calorie.app.data.repository.DiaryRepository
 import com.calorie.app.data.repository.PreferenceRepository
 import com.calorie.app.data.seed.SeedData
-import com.calorie.app.domain.planner.MealPlanner
+import com.calorie.app.domain.plan.PlanEditor
 import com.calorie.app.domain.planner.MealSlot
-import com.calorie.app.domain.planner.PlannedMeal
 import com.calorie.app.domain.preferences.PreferenceEngine
 import com.calorie.app.util.DateUtils
 import com.calorie.app.util.dailyTargetKcal
@@ -41,6 +40,7 @@ class PlanViewModel(app: Application) : AndroidViewModel(app) {
     private val db = (app as CalorieApp).database
     private val repo = DiaryRepository(db)
     private val preferences = PreferenceRepository(db)
+    private val editor = PlanEditor(db)
 
     /** 0 = сегодня, дальше вперёд до +6: план смотрим вперёд, а не назад. */
     private val offset = MutableStateFlow(0)
@@ -121,22 +121,12 @@ class PlanViewModel(app: Application) : AndroidViewModel(app) {
                 val target = dailyTargetKcal(profile.value)
                 val dates = (0..6).map { DateUtils.keyFor(it) }
                 val snapshot = withContext(Dispatchers.IO) { preferences.snapshot() }
-                val planned = withContext(Dispatchers.Default) {
-                    MealPlanner.planWeek(
-                        dates = dates,
-                        targetKcal = target,
-                        dishes = all,
-                        seed = System.currentTimeMillis(),
-                        preferences = snapshot
-                    )
+                val ok = withContext(Dispatchers.IO) {
+                    editor.regenerate(dates, target, snapshot)
                 }
-                if (planned.isEmpty()) {
+                if (!ok) {
                     _message.value = "Не удалось собрать рацион"
                     return@launch
-                }
-                withContext(Dispatchers.IO) {
-                    db.planDao().clearRange(dates.first(), dates.last())
-                    db.planDao().insertAll(planned.map { it.toEntity() })
                 }
                 dishes.value = all.associateBy { it.id }
                 _message.value = "Рацион собран на неделю"
@@ -150,7 +140,7 @@ class PlanViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 preferences.record(PreferenceEngine.TYPE_REMOVED, item.dishId)
-                db.planDao().deleteById(item.id)
+                editor.remove(item)
             }
         }
     }
@@ -160,48 +150,19 @@ class PlanViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 preferences.record(PreferenceEngine.TYPE_POSTPONED, item.dishId)
-                db.planDao().deleteById(item.id)
+                editor.remove(item)
             }
             _message.value = "Отложено на другой раз"
         }
     }
 
-    /**
-     * Меняет блюдо на ближайшее по калорийности из того же слота, стараясь
-     * не повторять то, что уже стоит в неделе чаще двух раз.
-     */
+    /** Меняет блюдо на ближайшее по калорийности из того же слота. */
     fun replace(item: PlanItem) {
         viewModelScope.launch {
-            val (all, week) = withContext(Dispatchers.IO) {
-                db.dishDao().all() to db.planDao().range(DateUtils.keyFor(0), DateUtils.keyFor(6))
-            }
-            val slot = MealSlot.byName(item.slot)
-            val usage = week.groupingBy { it.dishId }.eachCount()
-            val candidates = all
-                .filter { slot.name in it.slots.split(',') && it.id != item.dishId }
-                .sortedBy { kotlin.math.abs(it.kcalPerServing - item.kcal) }
-            val next = candidates.firstOrNull { (usage[it.id] ?: 0) < 2 }
-                ?: candidates.firstOrNull()
-            if (next == null) {
-                _message.value = "Больше нечего предложить"
-                return@launch
-            }
-            val servings = (item.kcal / next.kcalPerServing).coerceIn(0.5, 2.0)
-            val updated = item.copy(
-                id = 0,
-                dishId = next.id,
-                servings = round1(servings),
-                grams = next.gramsPerServing * servings,
-                kcal = next.kcalPerServing * servings,
-                protein = next.proteinPerServing * servings,
-                fat = next.fatPerServing * servings,
-                carbs = next.carbsPerServing * servings,
-                cooked = false
-            )
             withContext(Dispatchers.IO) {
                 preferences.record(PreferenceEngine.TYPE_REPLACED, item.dishId)
-                db.planDao().deleteById(item.id)
-                db.planDao().insertAll(listOf(updated))
+                val next = editor.replace(item)
+                if (next == null) _message.value = "Больше нечего предложить"
             }
         }
     }
@@ -250,19 +211,4 @@ class PlanViewModel(app: Application) : AndroidViewModel(app) {
             }
         }
     }
-
-    private fun PlannedMeal.toEntity() = PlanItem(
-        dateKey = dateKey,
-        slot = slot.name,
-        dishId = dish.id,
-        servings = servings,
-        grams = grams,
-        kcal = kcal,
-        protein = protein,
-        fat = fat,
-        carbs = carbs,
-        orderIndex = orderIndex
-    )
-
-    private fun round1(value: Double): Double = Math.round(value * 10.0) / 10.0
 }

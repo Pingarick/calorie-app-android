@@ -54,6 +54,15 @@
                 android:text="@string/cart_budget_button"
                 android:textColor="@color/calorie_primary"
                 app:strokeColor="@color/calorie_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPantry"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:textColor="@color/text_secondary"
+                tools:text="Дома: 3" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

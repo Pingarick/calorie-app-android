@@ -172,4 +172,20 @@
     <string name="recipe_generate">Сгенерировать шаги</string>
     <string name="recipe_close">Закрыть</string>
 
+    <!-- Чат -->
+    <string name="nav_chat">Чат</string>
+    <string name="chat_title">Чат</string>
+    <string name="chat_hint">Что изменить в рационе?</string>
+    <string name="chat_send">Отправить</string>
+    <string name="chat_clear">Очистить переписку</string>
+    <string name="chat_empty">Спросите: «поставь бюджет 4000», «замени ужин», «убери рыбу из плана».</string>
+
+    <!-- Продукты дома -->
+    <string name="cart_at_home">Есть дома</string>
+    <string name="cart_pantry_button">Дома: %1$d</string>
+    <string name="cart_pantry_title">Продукты дома</string>
+    <string name="cart_pantry_empty">Пока ничего не отмечено</string>
+    <string name="cart_pantry_clear">Очистить всё</string>
+    <string name="cart_home_added">Отмечено: есть дома</string>
+
 </resources>

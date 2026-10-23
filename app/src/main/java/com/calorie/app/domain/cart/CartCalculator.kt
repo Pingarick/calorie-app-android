@@ -44,7 +44,8 @@ object CartCalculator {
         plan: List<PlanItem>,
         dishes: Map<String, Dish>,
         ingredients: Map<String, List<DishIngredient>>,
-        products: Map<String, Product>
+        products: Map<String, Product>,
+        pantry: Map<String, Double> = emptyMap()
     ): CartTotal {
         val grams = HashMap<String, Double>()
         for (item in plan) {
@@ -56,8 +57,10 @@ object CartCalculator {
             }
         }
 
-        val lines = grams.mapNotNull { (productId, amount) ->
+        val lines = grams.mapNotNull { (productId, required) ->
             val product = products[productId] ?: return@mapNotNull null
+            // То, что уже есть дома, не покупаем: сумма и граммы уменьшаются.
+            val amount = (required - (pantry[productId] ?: 0.0)).coerceAtLeast(0.0)
             if (amount <= 0.0) return@mapNotNull null
             CartLine(
                 productId = productId,

@@ -9,7 +9,9 @@ import com.calorie.app.util.money
 import com.calorie.app.util.weight
 
 /** Список покупок: отделы магазина и продукты с граммами и ценой. */
-class CartAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CartAdapter(
+    private val onHome: (com.calorie.app.domain.cart.CartLine) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var rows: List<CartRow> = emptyList()
 
@@ -35,7 +37,7 @@ class CartAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val row = rows[position]) {
             is CartRow.Section -> (holder as SectionHolder).bind(row)
-            is CartRow.Line -> (holder as LineHolder).bind(row)
+            is CartRow.Line -> (holder as LineHolder).bind(row, onHome)
         }
     }
 
@@ -47,10 +49,11 @@ class CartAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     private class LineHolder(private val b: ItemCartLineBinding) : RecyclerView.ViewHolder(b.root) {
-        fun bind(row: CartRow.Line) {
+        fun bind(row: CartRow.Line, onHome: (com.calorie.app.domain.cart.CartLine) -> Unit) {
             b.txtProduct.text = row.line.name
             b.txtAmount.text = weight(row.line.grams)
             b.txtPrice.text = money(row.line.price)
+            b.btnAtHome.setOnClickListener { onHome(row.line) }
         }
     }
 

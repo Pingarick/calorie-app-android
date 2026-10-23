@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.calorie.app.R
 import com.calorie.app.ui.cart.CartFragment
+import com.calorie.app.ui.chat.ChatFragment
 import com.calorie.app.ui.plan.PlanFragment
 import com.calorie.app.ui.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -30,6 +31,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_cart -> {
                     show(CartFragment(), TAG_CART)
+                    true
+                }
+                R.id.nav_chat -> {
+                    show(ChatFragment(), TAG_CHAT)
                     true
                 }
                 else -> {
@@ -58,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG_PLAN = "tab_plan"
         const val TAG_DIARY = "tab_diary"
         const val TAG_CART = "tab_cart"
+        const val TAG_CHAT = "tab_chat"
         const val TAG_PROFILE = "tab_profile"
     }
 }

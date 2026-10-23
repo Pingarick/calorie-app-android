@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.Calorie.CardFlat"
     android:layout_width="match_parent"
@@ -28,8 +29,17 @@
             style="@style/TextAppearance.Calorie.Micro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_3"
+            android:layout_marginEnd="@dimen/space_2"
             tools:text="1.2 кг" />
+
+        <ImageButton
+            android:id="@+id/btnAtHome"
+            android:layout_width="@dimen/touch_target"
+            android:layout_height="@dimen/touch_target"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cart_at_home"
+            android:src="@drawable/ic_home"
+            app:tint="@color/text_secondary" />
 
         <TextView
             android:id="@+id/txtPrice"
