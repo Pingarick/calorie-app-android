@@ -50,7 +50,11 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
     }
 
     private fun render(state: CartUiState) {
-        b.txtTotal.text = getString(R.string.cart_total, money(state.total))
+        b.txtTotal.text = if (state.people > 1) {
+            getString(R.string.cart_total_people, money(state.total), state.people)
+        } else {
+            getString(R.string.cart_total, money(state.total))
+        }
         b.txtEmpty.visibility = if (state.hasPlan) View.GONE else View.VISIBLE
 
         b.btnPantry.text = getString(R.string.cart_pantry_button, state.pantry.size)

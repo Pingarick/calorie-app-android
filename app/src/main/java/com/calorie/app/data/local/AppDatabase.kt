@@ -10,6 +10,7 @@ import com.calorie.app.data.local.model.DiaryEntry
 import com.calorie.app.data.local.model.Dish
 import com.calorie.app.data.local.model.DishIngredient
 import com.calorie.app.data.local.model.PlanItem
+import com.calorie.app.data.local.model.BannedProduct
 import com.calorie.app.data.local.model.ChatMessage
 import com.calorie.app.data.local.model.PantryItem
 import com.calorie.app.data.local.model.Preference
@@ -32,9 +33,10 @@ const val DB_NAME = "calorie.db"
         Preference::class,
         Recipe::class,
         PantryItem::class,
-        ChatMessage::class
+        ChatMessage::class,
+        BannedProduct::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -47,6 +49,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun recipeDao(): RecipeDao
     abstract fun pantryDao(): PantryDao
     abstract fun chatDao(): ChatDao
+    abstract fun bannedDao(): BannedDao
 
     companion object {
         @Volatile
@@ -213,12 +216,27 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        /** Версия 8: готовка на несколько человек и запрещённые продукты. */
+        private val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `user_profile` ADD COLUMN `peopleCount` INTEGER NOT NULL DEFAULT 1")
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `banned_product` (
+                        `productId` TEXT NOT NULL,
+                        PRIMARY KEY(`productId`)
+                    )
+                    """.trimIndent()
+                )
+            }
+        }
+
         fun get(context: Context): AppDatabase =            INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     DB_NAME
-                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7).build().also { INSTANCE = it }
+                ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8).build().also { INSTANCE = it }
             }
     }
 }

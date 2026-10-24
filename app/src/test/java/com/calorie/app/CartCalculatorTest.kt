@@ -156,4 +156,18 @@ class CartCalculatorTest {
         assertEquals(360.0, cart.sections.first().lines.first().grams, 1e-9)
         assertEquals(144.0, cart.total, 1e-9)
     }
+
+    @Test
+    fun peopleMultiplyTheShoppingList() {
+        val cart = CartCalculator.build(
+            plan = listOf(item("a", 1.0)),
+            dishes = mapOf("a" to dish("a")),
+            ingredients = mapOf("a" to listOf(DishIngredient("a", "p", 100.0))),
+            products = mapOf("p" to product("p", 40.0)),
+            people = 3
+        )
+        // Одна порция на троих — 300 г и 120 ₽.
+        assertEquals(300.0, cart.sections.first().lines.first().grams, 1e-9)
+        assertEquals(120.0, cart.total, 1e-9)
+    }
 }

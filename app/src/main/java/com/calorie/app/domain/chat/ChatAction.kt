@@ -11,6 +11,9 @@ sealed class ChatAction {
     data class ReplaceMeal(val day: String, val slot: String) : ChatAction()
     data class RemoveMeal(val day: String, val slot: String) : ChatAction()
     data class ExcludeDish(val dish: String) : ChatAction()
+    data class SetPeople(val count: Int) : ChatAction()
+    data class ExcludeProduct(val product: String) : ChatAction()
+    data class AllowProduct(val product: String) : ChatAction()
     data object RegenerateWeek : ChatAction()
 }
 
@@ -65,6 +68,15 @@ object ChatActionParser {
 
         "exclude_dish" -> obj.str("dish")?.trim()?.takeIf { it.length in 2..80 }
             ?.let { ChatAction.ExcludeDish(it) }
+
+        "set_people" -> obj.int("count")?.takeIf { it in 1..12 }
+            ?.let { ChatAction.SetPeople(it) }
+
+        "exclude_product" -> obj.str("product")?.trim()?.takeIf { it.length in 2..60 }
+            ?.let { ChatAction.ExcludeProduct(it) }
+
+        "allow_product" -> obj.str("product")?.trim()?.takeIf { it.length in 2..60 }
+            ?.let { ChatAction.AllowProduct(it) }
 
         "regenerate_week" -> ChatAction.RegenerateWeek
 

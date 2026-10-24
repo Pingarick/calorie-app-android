@@ -30,7 +30,8 @@ data class CartUiState(
     val total: Double = 0.0,
     val budget: Int = 0,
     val hasPlan: Boolean = false,
-    val pantry: List<PantryLine> = emptyList()
+    val pantry: List<PantryLine> = emptyList(),
+    val people: Int = 1
 )
 
 class CartViewModel(app: Application) : AndroidViewModel(app) {
@@ -60,12 +61,14 @@ class CartViewModel(app: Application) : AndroidViewModel(app) {
         val (plan, products, pantry) = baseData
         val (byId, recipe) = recipeData
         val productById = products.associateBy { it.id }
+        val people = profile?.peopleCount ?: 1
         val cart = CartCalculator.build(
             plan = plan,
             dishes = byId,
             ingredients = recipe,
             products = productById,
-            pantry = pantry.associate { it.productId to it.grams }
+            pantry = pantry.associate { it.productId to it.grams },
+            people = people
         )
         CartUiState(
             sections = cart.sections,
@@ -74,7 +77,8 @@ class CartViewModel(app: Application) : AndroidViewModel(app) {
             hasPlan = plan.isNotEmpty(),
             pantry = pantry.mapNotNull { item ->
                 productById[item.productId]?.let { PantryLine(item.productId, it.name, item.grams) }
-            }.sortedBy { it.name }
+            }.sortedBy { it.name },
+            people = people
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, CartUiState())
 

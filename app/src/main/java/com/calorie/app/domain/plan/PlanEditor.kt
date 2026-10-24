@@ -25,7 +25,11 @@ class PlanEditor(private val db: AppDatabase) {
         preferences: Map<String, DishPreference>,
         seed: Long = System.currentTimeMillis()
     ): Boolean {
-        val dishes = db.dishDao().all()
+        val banned = db.bannedDao().all().map { it.productId }.toSet()
+        val ingredientsByDish = db.dishDao().allIngredients().groupBy { it.dishId }
+        val dishes = db.dishDao().all().filter { dish ->
+            ingredientsByDish[dish.id].orEmpty().none { it.productId in banned }
+        }
         if (dishes.isEmpty()) return false
         val planned = MealPlanner.planWeek(
             dates = dates,
@@ -72,6 +76,31 @@ class PlanEditor(private val db: AppDatabase) {
 
     suspend fun remove(item: PlanItem) {
         db.planDao().deleteById(item.id)
+    }
+
+    /** Сколько блюд останется с учётом запрещённых продуктов. */
+    suspend fun allowedDishCount(): Int {
+        val banned = db.bannedDao().all().map { it.productId }.toSet()
+        val ingredientsByDish = db.dishDao().allIngredients().groupBy { it.dishId }
+        return db.dishDao().all().count { dish ->
+            ingredientsByDish[dish.id].orEmpty().none { it.productId in banned }
+        }
+    }
+
+    /**
+     * Минимум вариантов по приёмам пищи. Если лук вырезал все супы, общий счёт
+     * может остаться большим, а обед — без выбора. Для предупреждения важнее минимум.
+     */
+    suspend fun minDishesPerSlot(): Int {
+        val banned = db.bannedDao().all().map { it.productId }.toSet()
+        val ingredientsByDish = db.dishDao().allIngredients().groupBy { it.dishId }
+        val allowed = db.dishDao().all().filter { dish ->
+            ingredientsByDish[dish.id].orEmpty().none { it.productId in banned }
+        }
+        if (allowed.isEmpty()) return 0
+        return MealSlot.entries.minOf { slot ->
+            allowed.count { slot.name in it.slots.split(',') }
+        }
     }
 
     private fun PlannedMeal.toEntity() = PlanItem(

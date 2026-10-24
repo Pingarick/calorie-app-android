@@ -135,6 +135,16 @@
             android:textColor="@color/text_secondary" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPeople"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:textColor="@color/calorie_primary"
+            app:strokeColor="@color/calorie_primary"
+            tools:text="Готовлю на: 1 чел." />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnKnownPrefs"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="match_parent"

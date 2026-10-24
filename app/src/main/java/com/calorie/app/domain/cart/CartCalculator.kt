@@ -45,16 +45,18 @@ object CartCalculator {
         dishes: Map<String, Dish>,
         ingredients: Map<String, List<DishIngredient>>,
         products: Map<String, Product>,
-        pantry: Map<String, Double> = emptyMap()
+        pantry: Map<String, Double> = emptyMap(),
+        people: Int = 1
     ): CartTotal {
         val grams = HashMap<String, Double>()
+        val eaters = people.coerceAtLeast(1)
         for (item in plan) {
             // Остатки уже куплены в составе кастрюли: не считаем их второй раз.
             if (item.leftover) continue
             val dish = dishes[item.dishId] ?: continue
             val recipe = ingredients[dish.id] ?: continue
-            // Закупаемся на всю кастрюлю: порций batchServings, каждая размера servings.
-            val factor = item.servings * item.batchServings
+            // Закупаемся на всю кастрюлю и на всех едоков.
+            val factor = item.servings * item.batchServings * eaters
             for (ingredient in recipe) {
                 grams[ingredient.productId] =
                     (grams[ingredient.productId] ?: 0.0) + ingredient.gramsPerServing * factor

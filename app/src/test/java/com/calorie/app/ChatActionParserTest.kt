@@ -82,6 +82,32 @@ class ChatActionParserTest {
     }
 
     @Test
+    fun parsesPeopleCount() {
+        val reply = ChatActionParser.parse(
+            """{"reply":"Готовлю на 4","action":{"type":"set_people","count":4}}"""
+        )
+        assertEquals(ChatAction.SetPeople(4), reply!!.action)
+
+        val bad = ChatActionParser.parse(
+            """{"reply":"Ок","action":{"type":"set_people","count":0}}"""
+        )
+        assertNull(bad!!.action)
+    }
+
+    @Test
+    fun parsesProductExclusion() {
+        val reply = ChatActionParser.parse(
+            """{"reply":"Убрал лук","action":{"type":"exclude_product","product":"лук"}}"""
+        )
+        assertEquals(ChatAction.ExcludeProduct("лук"), reply!!.action)
+
+        val back = ChatActionParser.parse(
+            """{"reply":"Вернул","action":{"type":"allow_product","product":"лук"}}"""
+        )
+        assertEquals(ChatAction.AllowProduct("лук"), back!!.action)
+    }
+
+    @Test
     fun garbageReturnsNull() {
         assertNull(ChatActionParser.parse("просто текст"))
         assertNull(ChatActionParser.parse("""{"action":null}"""))

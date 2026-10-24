@@ -20,6 +20,7 @@ import com.calorie.app.databinding.FragmentProfileBinding
 import com.calorie.app.ui.prefs.KnownPrefsActivity
 import com.calorie.app.util.dailyTargetKcal
 import com.calorie.app.util.macroTargets
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import java.util.Locale
@@ -53,6 +54,8 @@ class ProfileFragment : Fragment() {
             startActivity(Intent(requireContext(), KnownPrefsActivity::class.java))
         }
 
+        b.btnPeople.setOnClickListener { showPeopleDialog() }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.profile.collect { render(it) }
@@ -62,6 +65,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun render(p: UserProfile?) {
+        b.btnPeople.text = getString(R.string.profile_people, p?.peopleCount ?: 1)
         if (p == null) {
             b.txtDailyTarget.text = "—"
             b.txtMacroTarget.setText(R.string.profile_empty)
@@ -115,6 +119,18 @@ class ProfileFragment : Fragment() {
 
     private fun goalLabel(g: String): String =
         Goal.entries.firstOrNull { it.name == g }?.label?.trim() ?: g
+
+    private fun showPeopleDialog() {
+        val current = vm.profile.value?.peopleCount ?: 1
+        val options = (1..8).map { "$it чел." }.toTypedArray()
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.profile_people_dialog)
+            .setSingleChoiceItems(options, current - 1) { dialog, which ->
+                vm.setPeople(which + 1)
+                dialog.dismiss()
+            }
+            .show()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

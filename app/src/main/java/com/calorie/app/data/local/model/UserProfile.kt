@@ -16,5 +16,7 @@ data class UserProfile(
     val goal: String = "KEEP",            // Goal.name
     val customTargetKcal: Int = 0,        // 0 => считаем по формуле
     /** Недельный бюджет на продукты в рублях. 0 — не задан. */
-    @ColumnInfo(defaultValue = "0") val weeklyBudget: Int = 0
+    @ColumnInfo(defaultValue = "0") val weeklyBudget: Int = 0,
+    /** На сколько человек готовим. Влияет на корзину и рецепты, не на личную норму. */
+    @ColumnInfo(defaultValue = "1") val peopleCount: Int = 1
 )

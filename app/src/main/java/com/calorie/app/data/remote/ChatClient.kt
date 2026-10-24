@@ -74,7 +74,10 @@ class ChatClient(
             {"type":"set_target","kcal":2000} — дневная норма калорий.
             {"type":"replace_meal","day":"today|tomorrow","slot":"BREAKFAST|LUNCH|DINNER|SNACK"}.
             {"type":"remove_meal","day":"today|tomorrow","slot":"..."}.
-            {"type":"exclude_dish","dish":"название блюда"} — больше не предлагать.
+            "{\"type\":\"exclude_dish\",\"dish\":\"название блюда\"} — больше не предлагать.
+            {"type":"set_people","count":4} — готовить на N человек.
+            {"type":"exclude_product","product":"лук"} — убрать продукт из всех блюд.
+            {"type":"allow_product","product":"лук"} — вернуть продукт обратно.
             {"type":"regenerate_week"} — пересобрать рацион на неделю.
 
             Если запрос не про питание или действие не нужно — action: null.

@@ -15,6 +15,14 @@ import java.util.Locale
 
 data class RecipeLine(val name: String, val grams: Double)
 
+/** Результат загрузки диалога: блюдо, состав на всех едоков и закэшированные шаги. */
+private data class RecipeLoad(
+    val dish: com.calorie.app.data.local.model.Dish?,
+    val lines: List<RecipeLine>,
+    val steps: List<RecipeStep>?,
+    val people: Int
+)
+
 data class RecipeUiState(
     val dishId: String? = null,
     val title: String = "",
@@ -47,42 +55,39 @@ class RecipeViewModel(app: Application) : AndroidViewModel(app) {
             val data = withContext(Dispatchers.IO) {
                 val dish = db.dishDao().byId(id)
                 val products = db.productDao().all().associateBy { it.id }
-                // Для кастрюли показываем продукты на все порции, а не на одну тарелку.
+                val people = db.profileDao().get()?.peopleCount ?: 1
+                // Для кастрюли показываем продукты на все порции и на всех едоков.
                 val batchFactor = if (batchServings > 0) batchServings else 1.0
                 val lines = db.dishDao().ingredientsFor(id).mapNotNull { ingredient ->
                     products[ingredient.productId]?.let { product ->
-                        RecipeLine(product.name, ingredient.gramsPerServing * amount * batchFactor)
+                        RecipeLine(
+                            product.name,
+                            ingredient.gramsPerServing * amount * batchFactor * people
+                        )
                     }
                 }
-                Triple(dish, lines, repo.cached(id))
+                RecipeLoad(dish, lines, repo.cached(id), people)
             }
-            val dish = data.first
+            val dish = data.dish
             if (dish == null) {
                 _state.value = RecipeUiState(error = "Блюдо не найдено")
                 return@launch
             }
-            val steps = data.third.orEmpty()
-            val portion = if (batchServings > 1) {
-                String.format(
-                    Locale.US,
-                    "%.1f порц. · %d г · готовим %d порции",
-                    amount,
-                    (dish.gramsPerServing * amount).toInt(),
-                    batchServings.toInt()
-                )
-            } else {
-                String.format(
-                    Locale.US,
-                    "%.1f порц. · %d г",
-                    amount,
-                    (dish.gramsPerServing * amount).toInt()
-                )
+            val steps = data.steps.orEmpty()
+            val suffix = buildString {
+                if (batchServings > 1) append(" · готовим ${batchServings.toInt()} порции")
+                if (data.people > 1) append(" · на ${data.people} чел.")
             }
             _state.value = RecipeUiState(
                 dishId = id,
                 title = dish.title,
-                portion = portion,
-                ingredients = data.second,
+                portion = String.format(
+                    Locale.US,
+                    "%.1f порц. · %d г",
+                    amount,
+                    (dish.gramsPerServing * amount).toInt()
+                ) + suffix,
+                ingredients = data.lines,
                 steps = steps,
                 hasRecipe = steps.isNotEmpty()
             )
