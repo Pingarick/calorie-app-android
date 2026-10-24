@@ -1,3 +1,6 @@
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Properties
 
 plugins {
@@ -113,4 +116,43 @@ dependencies {
 // проверяются глазами, а не падением на устройстве.
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
+}
+
+/**
+ * Копирует собранный release APK в папку release/ в корне проекта.
+ * Так файл всегда лежит в одном месте и не приходится искать его в build/.
+ * Запускается автоматически после :app:assembleRelease.
+ */
+val exportReleaseApk by tasks.registering {
+    group = "build"
+    description = "Копирует release APK в release/Калории.apk"
+    mustRunAfter("assembleRelease")
+
+    doLast {
+        val apk = project.file("build/outputs/apk/release/app-release.apk")
+        if (!apk.exists()) {
+            throw GradleException("APK не найден: сначала соберите :app:assembleRelease")
+        }
+        val dir = rootProject.file("release")
+        dir.mkdirs()
+
+        val stable = File(dir, "Калории.apk")
+        apk.copyTo(stable, overwrite = true)
+
+        val date = SimpleDateFormat("yyyy-MM-dd").format(Date())
+        apk.copyTo(File(dir, "Калории-$date.apk"), overwrite = true)
+
+        logger.lifecycle("APK готов: ${stable.absolutePath}")
+    }
+}
+
+tasks.matching { it.name == "assembleRelease" }.configureEach {
+    finalizedBy(exportReleaseApk)
+}
+
+/** Короткая команда: gradle :app:apk — собрать и положить в release/. */
+tasks.register("apk") {
+    group = "build"
+    description = "Собрать release APK и положить в release/Калории.apk"
+    dependsOn("assembleRelease")
 }
