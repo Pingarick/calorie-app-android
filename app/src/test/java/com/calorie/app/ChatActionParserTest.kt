@@ -113,4 +113,13 @@ class ChatActionParserTest {
         assertNull(ChatActionParser.parse("""{"action":null}"""))
         assertNull(ChatActionParser.parse(""))
     }
+
+    @Test
+    fun actionOnlyAnswerGetsAStubReply() {
+        val reply = ChatActionParser.parse(
+            """{"action":{"type":"set_budget","amount":3500}}"""
+        )
+        assertEquals("Готово", reply!!.text)
+        assertEquals(ChatAction.SetBudget(3500), reply.action)
+    }
 }

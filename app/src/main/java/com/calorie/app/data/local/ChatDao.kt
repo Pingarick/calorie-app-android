@@ -16,4 +16,7 @@ interface ChatDao {
 
     @Query("DELETE FROM chat_message")
     suspend fun clear()
+
+    @Query("SELECT * FROM chat_message ORDER BY id DESC LIMIT :limit")
+    suspend fun recent(limit: Int): List<ChatMessage>
 }

@@ -11,6 +11,9 @@ import com.calorie.app.data.remote.ChatClient
 import com.calorie.app.data.repository.DiaryRepository
 import com.calorie.app.data.repository.PreferenceRepository
 import com.calorie.app.domain.chat.ChatAction
+import com.calorie.app.domain.chat.ChatConfirmation
+import com.calorie.app.domain.chat.ChatPrompt
+import com.calorie.app.domain.chat.ChatTurn
 import com.calorie.app.domain.plan.PlanEditor
 import com.calorie.app.domain.planner.MealSlot
 import com.calorie.app.domain.preferences.PreferenceEngine
@@ -46,6 +49,9 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
     val messages: StateFlow<List<ChatMessage>> = db.chatDao().observeAll()
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
+    /** Действие, которое ждёт «да»: модель предложила сумму, но в запросе числа не было. */
+    private var pendingAction: ChatAction? = null
+
     fun send(raw: String) {
         val text = raw.trim()
         if (text.isEmpty() || _sending.value) return
@@ -53,34 +59,80 @@ class ChatViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             _sending.value = true
             _error.value = null
-            withContext(Dispatchers.IO) {
-                db.chatDao().insert(ChatMessage(role = "user", text = text))
-            }
             try {
-                val context = withContext(Dispatchers.IO) { buildContext() }
-                val reply = client.reply(text, context)
-                val outcome = withContext(Dispatchers.IO) { apply(reply.action) }
-                val finalText = if (outcome == null) reply.text else reply.text + "\n\n" + outcome
-                withContext(Dispatchers.IO) {
-                    db.chatDao().insert(
-                        ChatMessage(
-                            role = "assistant",
-                            text = finalText,
-                            actionJson = reply.actionJson
-                        )
-                    )
+                val pending = pendingAction
+                if (pending != null) {
+                    when {
+                        ChatConfirmation.isYes(text) -> {
+                            pendingAction = null
+                            saveUser(text)
+                            val outcome = withContext(Dispatchers.IO) { apply(pending) }
+                            saveAssistant(
+                                buildString {
+                                    append("Готово")
+                                    if (!outcome.isNullOrBlank()) append(": $outcome")
+                                }
+                            )
+                            return@launch
+                        }
+
+                        ChatConfirmation.isNo(text) -> {
+                            pendingAction = null
+                            saveUser(text)
+                            saveAssistant("Отменил, ничего не менял")
+                            return@launch
+                        }
+
+                        else -> pendingAction = null
+                    }
                 }
+
+                // История читается до вставки текущего сообщения, иначе оно задвоится.
+                // Технические ошибки в память не отдаём: они сбивают модель.
+                val history = withContext(Dispatchers.IO) {
+                    db.chatDao().recent(ChatPrompt.MAX_HISTORY).reversed()
+                        .filterNot { it.text.startsWith("Не получилось") }
+                        .map { ChatTurn(it.role, it.text) }
+                }
+                saveUser(text)
+
+                val context = withContext(Dispatchers.IO) { buildContext() }
+                val reply = client.reply(text, context, history)
+
+                val action = reply.action
+                if (action != null && ChatConfirmation.needsConfirmation(action, text)) {
+                    pendingAction = action
+                    saveAssistant(
+                        reply.text + "\n\nПоставить " + ChatConfirmation.describe(action) +
+                            "? Скажите «да» или назовите сумму."
+                    )
+                    return@launch
+                }
+
+                val outcome = withContext(Dispatchers.IO) { apply(action) }
+                val finalText = if (outcome == null) reply.text else reply.text + "\n\n" + outcome
+                saveAssistant(finalText, reply.actionJson)
             } catch (e: Exception) {
                 val message = e.message ?: "ошибка сети"
                 _error.value = message
-                withContext(Dispatchers.IO) {
-                    db.chatDao().insert(
-                        ChatMessage(role = "assistant", text = "Не получилось: $message")
-                    )
-                }
+                saveAssistant("Не получилось: $message")
             } finally {
                 _sending.value = false
             }
+        }
+    }
+
+    private suspend fun saveUser(text: String) {
+        withContext(Dispatchers.IO) {
+            db.chatDao().insert(ChatMessage(role = "user", text = text))
+        }
+    }
+
+    private suspend fun saveAssistant(text: String, actionJson: String = "") {
+        withContext(Dispatchers.IO) {
+            db.chatDao().insert(
+                ChatMessage(role = "assistant", text = text, actionJson = actionJson)
+            )
         }
     }
 

@@ -24,7 +24,10 @@ class ChatFragment : Fragment(com.calorie.app.R.layout.fragment_chat) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _b = FragmentChatBinding.bind(view)
 
-        b.recycler.layoutManager = LinearLayoutManager(requireContext())
+        b.recycler.layoutManager = LinearLayoutManager(requireContext()).apply {
+            // Чат должен «прилипать» к низу: иначе новый ответ остаётся за экраном.
+            stackFromEnd = true
+        }
         b.recycler.adapter = adapter
 
         val send = {
@@ -53,7 +56,9 @@ class ChatFragment : Fragment(com.calorie.app.R.layout.fragment_chat) {
                         b.txtChatEmpty.visibility =
                             if (messages.isEmpty()) View.VISIBLE else View.GONE
                         if (messages.isNotEmpty()) {
-                            b.recycler.scrollToPosition(messages.lastIndex)
+                            b.recycler.post {
+                                b.recycler.scrollToPosition(messages.lastIndex)
+                            }
                         }
                     }
                 }

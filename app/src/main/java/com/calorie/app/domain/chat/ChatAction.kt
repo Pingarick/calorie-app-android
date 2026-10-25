@@ -44,12 +44,15 @@ object ChatActionParser {
         val obj = root.asJsonObject
 
         val text = obj.str("reply")?.trim().orEmpty()
-        if (text.isEmpty()) return null
-
         val actionElement = obj.get("action")?.takeIf { it.isJsonObject }
         val action = actionElement?.let { parseAction(it.asJsonObject) }
+
+        // Модель может вернуть только действие, без текста. Это валидный ответ:
+        // подставляем короткое «Готово», иначе пользователь увидит ошибку на пустом месте.
+        if (text.isEmpty() && action == null) return null
+
         return ChatReply(
-            text = text,
+            text = text.ifEmpty { "Готово" },
             action = action,
             actionJson = if (action != null) actionElement.toString() else ""
         )
