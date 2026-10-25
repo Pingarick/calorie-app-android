@@ -79,11 +79,16 @@ class PlanAdapter(
             val item = row.item
             b.txtDishTitle.text = row.dish.title
             val prefix = if (item.leftover) "остатки · " else ""
+            val batch = if (item.batchServings > 1) {
+                " · на ${item.batchServings.toInt()} порц."
+            } else {
+                ""
+            }
             b.txtDishMeta.text = prefix + String.format(
                 Locale.US,
                 "%.1f порц. · %d г · Б %.0f · Ж %.0f · У %.0f",
                 item.servings, item.grams.toInt(), item.protein, item.fat, item.carbs
-            )
+            ) + batch
             b.txtDishKcal.text = String.format(Locale.US, "%d ккал", item.kcal.toInt())
             b.btnCook.isEnabled = !item.cooked
             b.btnCook.alpha = if (item.cooked) 0.35f else 1f

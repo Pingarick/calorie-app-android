@@ -86,4 +86,10 @@ interface PlanDao {
 
     @Query("UPDATE plan_item SET cooked = 1 WHERE id = :id")
     suspend fun markCooked(id: Long)
+
+    @Query("UPDATE plan_item SET batchServings = :batch, leftover = :leftover WHERE id = :id")
+    suspend fun updateBatch(id: Long, batch: Double, leftover: Boolean)
+
+    @Query("UPDATE plan_item SET batchServings = :batch WHERE id = :id")
+    suspend fun updateBatchServings(id: Long, batch: Double)
 }

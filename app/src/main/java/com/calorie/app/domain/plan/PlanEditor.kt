@@ -46,6 +46,10 @@ class PlanEditor(private val db: AppDatabase) {
 
     /** Меняет блюдо на ближайшее по калорийности, стараясь не повторять его в неделе. */
     suspend fun replace(item: PlanItem): PlanItem? {
+        // Если меняем день готовки, остатки перестают быть остатками:
+        // готовим их отдельно, иначе продукты на них не попадут в корзину.
+        if (item.leftover) shrinkBatch(item) else releaseLeftovers(item)
+
         val all = db.dishDao().all()
         val week = db.planDao().range(DateUtils.keyFor(0), DateUtils.keyFor(6))
         val slot = MealSlot.byName(item.slot)
@@ -67,6 +71,8 @@ class PlanEditor(private val db: AppDatabase) {
             protein = next.proteinPerServing * servings,
             fat = next.fatPerServing * servings,
             carbs = next.carbsPerServing * servings,
+            batchServings = 1.0,
+            leftover = false,
             cooked = false
         )
         db.planDao().deleteById(item.id)
@@ -75,7 +81,40 @@ class PlanEditor(private val db: AppDatabase) {
     }
 
     suspend fun remove(item: PlanItem) {
+        if (item.leftover) shrinkBatch(item) else releaseLeftovers(item)
         db.planDao().deleteById(item.id)
+    }
+
+    /**
+     * Остатки от кастрюли, которую больше не готовим, становятся обычными порциями:
+     * их продукты снова попадают в корзину, а день не остаётся с пустым слотом.
+     */
+    private suspend fun releaseLeftovers(head: PlanItem) {
+        if (head.batchServings <= 1.0) return
+        val week = db.planDao().range(head.dateKey, DateUtils.keyFor(6))
+        week.asSequence()
+            .filter {
+                it.dateKey > head.dateKey &&
+                    it.slot == head.slot &&
+                    it.dishId == head.dishId &&
+                    it.leftover
+            }
+            .take((head.batchServings - 1).toInt().coerceAtLeast(0))
+            .forEach { db.planDao().updateBatch(it.id, 1.0, false) }
+    }
+
+    /** Убрали одну порцию из кастрюли — уменьшаем и закупку на неё. */
+    private suspend fun shrinkBatch(leftover: PlanItem) {
+        val before = db.planDao().range(DateUtils.keyFor(0), leftover.dateKey)
+        val head = before.lastOrNull {
+            it.dateKey < leftover.dateKey &&
+                it.slot == leftover.slot &&
+                it.dishId == leftover.dishId &&
+                !it.leftover
+        } ?: return
+        if (head.batchServings > 1.0) {
+            db.planDao().updateBatchServings(head.id, head.batchServings - 1.0)
+        }
     }
 
     /** Сколько блюд останется с учётом запрещённых продуктов. */
