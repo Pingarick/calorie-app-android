@@ -35,6 +35,11 @@
             android:exported="false"
             android:label="@string/setup_title" />
 
+        <activity
+            android:name=".ui.week.WeekActivity"
+            android:exported="false"
+            android:label="@string/week_title" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

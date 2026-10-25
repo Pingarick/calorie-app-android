@@ -205,4 +205,10 @@
     <string name="setup_save">Сохранить и продолжить</string>
     <string name="profile_setup">Настройки рациона</string>
 
+    <!-- Неделя -->
+    <string name="week_title">Неделя</string>
+    <string name="week_hint">Тап по дню открывает его в рационе.</string>
+    <string name="week_leftover">остатки</string>
+    <string name="plan_week_button">Вся неделя</string>
+
 </resources>

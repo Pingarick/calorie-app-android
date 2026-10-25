@@ -100,6 +100,11 @@ class PlanViewModel(app: Application) : AndroidViewModel(app) {
         if (offset.value < 6) offset.value += 1
     }
 
+    /** Переход к конкретному дню из экрана недели. */
+    fun goToOffset(value: Int) {
+        offset.value = value.coerceIn(0, 6)
+    }
+
     fun clearMessage() {
         _message.value = null
     }

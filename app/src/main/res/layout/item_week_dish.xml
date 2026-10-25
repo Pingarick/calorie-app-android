@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/space_4"
+    android:paddingTop="@dimen/space_1"
+    android:paddingEnd="0dp"
+    android:paddingBottom="@dimen/space_1">
+
+    <TextView
+        android:id="@+id/txtDish"
+        style="@style/TextAppearance.Calorie.Body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="Обед · Куриный суп с вермишелью" />
+
+    <TextView
+        android:id="@+id/txtLeftover"
+        style="@style/TextAppearance.Calorie.Micro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_2"
+        android:text="@string/week_leftover"
+        android:textColor="@color/calorie_primary"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/txtDishKcal"
+        style="@style/TextAppearance.Calorie.Micro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_2"
+        android:textColor="@color/text_secondary"
+        tools:text="583" />
+</LinearLayout>

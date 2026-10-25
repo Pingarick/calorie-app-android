@@ -3,6 +3,7 @@ package com.calorie.app.ui.plan
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -13,6 +14,7 @@ import com.calorie.app.R
 import com.calorie.app.databinding.DialogRecipeBinding
 import com.calorie.app.databinding.FragmentPlanBinding
 import com.calorie.app.util.weight
+import com.calorie.app.ui.week.WeekActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -24,6 +26,15 @@ class PlanFragment : Fragment(R.layout.fragment_plan) {
     private val vm: PlanViewModel by viewModels()
     private val recipeVm: RecipeViewModel by viewModels()
     private lateinit var adapter: PlanAdapter
+
+    private val weekLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            val offset = result.data?.getIntExtra(WeekActivity.EXTRA_OFFSET, -1) ?: -1
+            if (offset >= 0) vm.goToOffset(offset)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _b = FragmentPlanBinding.bind(view)
@@ -41,6 +52,9 @@ class PlanFragment : Fragment(R.layout.fragment_plan) {
         b.btnPrevDay.setOnClickListener { vm.goToPrev() }
         b.btnNextDay.setOnClickListener { vm.goToNext() }
         b.btnGenerate.setOnClickListener { vm.generateWeek() }
+        b.btnWeek.setOnClickListener {
+            weekLauncher.launch(android.content.Intent(requireContext(), WeekActivity::class.java))
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
