@@ -18,6 +18,7 @@ import com.calorie.app.data.local.model.Goal
 import com.calorie.app.data.local.model.UserProfile
 import com.calorie.app.data.repository.DiaryRepository
 import com.calorie.app.ui.main.MainActivity
+import com.calorie.app.ui.setup.SetupActivity
 import com.calorie.app.util.dailyTargetKcal
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
@@ -69,8 +70,8 @@ class WelcomeActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val p = repo.getProfile()
             if (p != null && !editMode) {
-                // Анкета есть и это холодный старт — показываем сразу Дневник.
-                goToDiary()
+                // Анкета есть и это холодный старт — сразу к настройке рациона или в приложение.
+                continueAfterProfile()
                 return@launch
             }
             p?.let(::prefill)
@@ -251,14 +252,35 @@ class WelcomeActivity : AppCompatActivity() {
             customTargetKcal = custom
         )
         lifecycleScope.launch {
-            repo.saveProfile(profile)
-            if (editMode) finish() else goToDiary()
+            // Берём существующий профиль, иначе сохранение анкеты стирало бы
+            // бюджет, число едоков и прочие настройки рациона.
+            val current = repo.getProfile() ?: UserProfile()
+            repo.saveProfile(
+                current.copy(
+                    gender = profile.gender,
+                    ageYears = profile.ageYears,
+                    heightCm = profile.heightCm,
+                    weightKg = profile.weightKg,
+                    activity = profile.activity,
+                    goal = profile.goal,
+                    customTargetKcal = profile.customTargetKcal
+                )
+            )
+            if (editMode) finish() else continueAfterProfile()
         }
     }
 
-    /** Открывает Дневник и закрывает этот экран, чтобы не осталось «пустого» таска. */
-    private fun goToDiary() {
-        startActivity(Intent(this, MainActivity::class.java))
+    /**
+     * После анкеты ведём в настройку рациона, если она ещё не пройдена,
+     * иначе сразу в приложение.
+     */
+    private fun continueAfterProfile() {
+        val next = if (SetupActivity.isDone(this)) {
+            MainActivity::class.java
+        } else {
+            SetupActivity::class.java
+        }
+        startActivity(Intent(this, next))
         finish()
     }
 

@@ -18,6 +18,7 @@ import com.calorie.app.data.local.model.Goal
 import com.calorie.app.data.local.model.UserProfile
 import com.calorie.app.databinding.FragmentProfileBinding
 import com.calorie.app.ui.prefs.KnownPrefsActivity
+import com.calorie.app.ui.setup.SetupActivity
 import com.calorie.app.util.dailyTargetKcal
 import com.calorie.app.util.macroTargets
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -55,6 +56,13 @@ class ProfileFragment : Fragment() {
         }
 
         b.btnPeople.setOnClickListener { showPeopleDialog() }
+
+        b.btnSetup.setOnClickListener {
+            startActivity(
+                Intent(requireContext(), SetupActivity::class.java)
+                    .putExtra(SetupActivity.EXTRA_EDIT, true)
+            )
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

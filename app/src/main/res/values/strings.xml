@@ -193,4 +193,16 @@
     <string name="profile_people_dialog">На сколько человек готовить?</string>
     <string name="cart_total_people">%1$s · на %2$d чел.</string>
 
+    <!-- Настройка рациона -->
+    <string name="setup_title">Настройка рациона</string>
+    <string name="setup_subtitle">Пара минут — и рацион будет под вас: на сколько человек готовить, сколько тратить и что не любите.</string>
+    <string name="setup_people">На сколько человек готовить</string>
+    <string name="setup_people_chip">%1$d чел.</string>
+    <string name="setup_budget">Бюджет на неделю, ₽</string>
+    <string name="setup_budget_hint">Можно пропустить</string>
+    <string name="setup_exclusions">Что не любите</string>
+    <string name="setup_exclusions_hint">Отметьте продукты — блюда с ними не появятся в рационе.</string>
+    <string name="setup_save">Сохранить и продолжить</string>
+    <string name="profile_setup">Настройки рациона</string>
+
 </resources>

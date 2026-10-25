@@ -30,6 +30,11 @@
             android:exported="false"
             android:label="@string/known_title" />
 
+        <activity
+            android:name=".ui.setup.SetupActivity"
+            android:exported="false"
+            android:label="@string/setup_title" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
